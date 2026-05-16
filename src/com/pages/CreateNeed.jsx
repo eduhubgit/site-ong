@@ -66,7 +66,7 @@ function CreateNeed() {
 
   const abrirConfirmacao = () => {
     if (categoriasSelecionadas.length === 0) {
-      alert("Selecione pelo menos uma categoria.");
+      alert("Selecione pelo menos uma categoria antes de publicar a necessidade.");
       return;
     }
 
@@ -79,6 +79,24 @@ function CreateNeed() {
   };
 
   const publicarNecessidades = () => {
+    if (!ongLogada) {
+      alert("Você precisa estar logado como ONG para publicar necessidades.");
+      navigate("/");
+      return;
+    }
+
+    if (categoriasSelecionadas.length === 0) {
+      alert("Não é possível publicar sem selecionar uma categoria.");
+      setMostrarConfirmacao(false);
+      return;
+    }
+
+    if (itens.length === 0) {
+      alert("Não é possível publicar sem adicionar pelo menos uma necessidade.");
+      setMostrarConfirmacao(false);
+      return;
+    }
+
     const necessidadesSalvas =
       JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
 
@@ -86,12 +104,12 @@ function CreateNeed() {
       id: Date.now(),
 
       ong: {
-        nome: ongLogada?.nome || "ONG não identificada",
-        email: ongLogada?.email || "",
-        cnpj: ongLogada?.cnpj || "",
-        localizacao: ongLogada?.localizacao || "",
-        nicho: ongLogada?.nicho || "",
-        imagem: ongLogada?.imagem || "",
+        nome: ongLogada.nome,
+        email: ongLogada.email,
+        cnpj: ongLogada.cnpj,
+        localizacao: ongLogada.localizacao,
+        nicho: ongLogada.nicho,
+        imagem: ongLogada.imagem || "",
       },
 
       categorias: categoriasSelecionadas,
@@ -124,16 +142,19 @@ function CreateNeed() {
         <div className="ong-logo">+COM</div>
 
         <div className="ong-nav-links">
-          <button onClick={() => navigate("/home")}>Home</button>
+          <button type="button" onClick={() => navigate("/home")}>
+            Home
+          </button>
 
-          <button onClick={() => setMostrarNormas(true)}>
+          <button type="button" onClick={() => setMostrarNormas(true)}>
             Normas do site
           </button>
 
-          <button>Suporte</button>
+          <button type="button">Suporte</button>
         </div>
 
         <button
+          type="button"
           className="ong-profile-circle"
           onClick={() => navigate("/perfil-ong")}
         >
@@ -200,7 +221,11 @@ function CreateNeed() {
               />
             </div>
 
-            <button className="add-need-button" onClick={adicionarItem}>
+            <button
+              type="button"
+              className="add-need-button"
+              onClick={adicionarItem}
+            >
               ADD
             </button>
           </div>
@@ -223,7 +248,10 @@ function CreateNeed() {
                       <span>{item.quantidade}</span>
                     </div>
 
-                    <button onClick={() => removerItem(item.id)}>
+                    <button
+                      type="button"
+                      onClick={() => removerItem(item.id)}
+                    >
                       Remover
                     </button>
                   </li>
@@ -231,7 +259,14 @@ function CreateNeed() {
               </ul>
             )}
 
-            <button className="publish-button" onClick={abrirConfirmacao}>
+            <button
+              type="button"
+              className="publish-button"
+              onClick={abrirConfirmacao}
+              disabled={
+                categoriasSelecionadas.length === 0 || itens.length === 0
+              }
+            >
               Publicar
             </button>
           </div>
@@ -254,11 +289,14 @@ function CreateNeed() {
             </p>
 
             <div className="confirm-buttons">
-              <button onClick={publicarNecessidades}>
+              <button type="button" onClick={publicarNecessidades}>
                 Sim, publicar
               </button>
 
-              <button onClick={() => setMostrarConfirmacao(false)}>
+              <button
+                type="button"
+                onClick={() => setMostrarConfirmacao(false)}
+              >
                 Cancelar
               </button>
             </div>
@@ -282,7 +320,7 @@ function CreateNeed() {
 
             <p>• Remova pedidos que já foram atendidos.</p>
 
-            <button onClick={() => setMostrarNormas(false)}>
+            <button type="button" onClick={() => setMostrarNormas(false)}>
               Fechar
             </button>
           </div>

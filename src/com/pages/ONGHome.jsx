@@ -92,29 +92,21 @@ function ONGHome() {
       </section>
 
       <section className="ong-actions">
-        <button
-          className="action-card teal"
-          onClick={() => navigate("/publicar-necessidades")}
-        >
-          <span>＋</span>
-          Publicar necessidades
-        </button>
+      <button
+       className="action-card teal"
+       onClick={() => navigate("/publicar-necessidades")}
+      >
+      <span>＋</span>
+      Publicar necessidades
+      </button>
 
-        <button
-          className="action-card blue"
-          onClick={() => navigate("/necessidades-publicadas")}
-        >
-          <span>▣</span>
-          Necessidades publicadas
-        </button>
-
-        <button
-          className="action-card orange"
-          onClick={() => navigate("/doacoes-recebidas")}
-        >
-          <span>✓</span>
-          Doações recebidas
-        </button>
+      <  button
+      className="action-card blue"
+      onClick={() => navigate("/necessidades-publicadas")}
+      >
+      <span>▣</span>
+      Necessidades publicadas
+      </button>
       </section>
 
       <section className="thanks-section">

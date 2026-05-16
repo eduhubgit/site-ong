@@ -265,3 +265,11 @@
 .confirm-buttons button:last-child {
   background-color: #777;
 }
+
+.publish-button:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+  box-shadow: none;
+}
