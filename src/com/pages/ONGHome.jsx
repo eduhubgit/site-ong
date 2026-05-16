@@ -15,6 +15,14 @@ function ONGHome() {
   const cidadeOng = ongLogada?.localizacao || "Ceará";
   const inicialPerfil = nomeOng.charAt(0).toUpperCase();
 
+  const irParaRodape = () => {
+    const rodape = document.getElementById("rodape");
+
+    if (rodape) {
+      rodape.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="ong-home-page" id="topo">
       <nav className="ong-navbar">
@@ -27,18 +35,18 @@ function ONGHome() {
             Normas do site
           </button>
 
-          <button>Suporte</button>
+          <button onClick={irParaRodape}>Suporte</button>
         </div>
 
         <button
           className="ong-profile-circle"
           onClick={() => navigate("/perfil-ong")}
         >
-         {ongLogada?.imagem ? (
-         <img src={ongLogada.imagem} alt="Foto da ONG" />
-         ) : (
-           inicialPerfil
-            )}
+          {ongLogada?.imagem ? (
+            <img src={ongLogada.imagem} alt="Foto da ONG" />
+          ) : (
+            inicialPerfil
+          )}
         </button>
       </nav>
 
@@ -108,6 +116,70 @@ function ONGHome() {
           Doações recebidas
         </button>
       </section>
+
+      <section className="thanks-section">
+        <div className="thanks-text">
+          <h2>Obrigado por fazer parte da nossa história!</h2>
+
+          <p>
+            Sua contribuição como ONG é essencial para conectar doadores às
+            pessoas e instituições que realmente precisam de ajuda.
+          </p>
+        </div>
+
+        <div className="thanks-illustration">
+          <div className="heart heart-one"></div>
+          <div className="heart heart-two"></div>
+          <div className="box box-one"></div>
+          <div className="box box-two"></div>
+          <div className="box box-three">
+            <span>Doação</span>
+          </div>
+        </div>
+      </section>
+
+      <footer className="ong-footer" id="rodape">
+        <div className="footer-column">
+          <h3>Links Rápidos</h3>
+
+          <button onClick={() => navigate("/home")}>Home</button>
+          <button onClick={() => navigate("/publicar-necessidades")}>
+            Publicar necessidades
+          </button>
+          <button onClick={() => navigate("/necessidades-publicadas")}>
+            Necessidades publicadas
+          </button>
+        </div>
+
+        <div className="footer-column">
+          <h3>Ajuda</h3>
+
+          <button onClick={() => setMostrarNormas(true)}>
+            Dúvidas frequentes
+          </button>
+          <button>Comunidade</button>
+          <button>Suporte</button>
+        </div>
+
+        <div className="footer-column">
+          <h3>Termos e condições</h3>
+
+          <button onClick={() => setMostrarNormas(true)}>
+            Normas do site
+          </button>
+          <button>Termos legais</button>
+        </div>
+
+        <div className="footer-brand">
+          <h2>+COM</h2>
+
+          <div className="footer-icons">
+            <span>☏</span>
+            <span>◎</span>
+            <span>✉</span>
+          </div>
+        </div>
+      </footer>
 
       {mostrarNormas && (
         <div className="modal-background">

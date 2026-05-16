@@ -8,6 +8,19 @@ function ONGProfile() {
   const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
 
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
+  const [mostrarNormas, setMostrarNormas] = useState(false);
+
+  const irParaSuporte = () => {
+  navigate("/home");
+
+  setTimeout(() => {
+    const rodape = document.getElementById("rodape");
+
+    if (rodape) {
+      rodape.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 100);
+};
 
   const [perfil, setPerfil] = useState(
     ongLogada || {
@@ -100,15 +113,23 @@ function ONGProfile() {
     navigate("/");
   };
 
+  
+
   return (
     <div className="profile-page">
       <nav className="ong-navbar">
         <div className="ong-logo">+COM</div>
 
         <div className="ong-nav-links">
-          <Link to="/home">Home</Link>
-          <button>Normas do site</button>
-          <button>Suporte</button>
+        <Link to="/home">Home</Link>
+
+        <button onClick={() => setMostrarNormas(true)}>
+         Normas do site
+        </button>
+
+        <button onClick={irParaSuporte}>
+        Suporte
+        </button>
         </div>
 
         <div className="ong-profile-circle">
@@ -241,8 +262,32 @@ function ONGProfile() {
             </div>
           </div>
         </div>
+
+        
       )}
+      {mostrarNormas && (
+  <div className="modal-background">
+    <div className="modal-box">
+      <h2>Normas do site</h2>
+
+      <p>• Publique apenas necessidades reais da sua instituição.</p>
+
+      <p>
+        • Mantenha os pedidos atualizados conforme forem recebendo doações.
+      </p>
+
+      <p>• Não utilize informações falsas ou enganosas.</p>
+
+      <p>• Remova pedidos que já foram atendidos.</p>
+
+      <button onClick={() => setMostrarNormas(false)}>
+        Fechar
+      </button>
     </div>
+  </div>
+)}
+    </div>
+    
   );
 }
 

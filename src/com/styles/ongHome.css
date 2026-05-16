@@ -498,3 +498,258 @@ html {
 .disconnect-modal-buttons button:last-child {
   background-color: #777;
 }
+
+.ong-nav-links a,
+.ong-nav-links button {
+  background-color: transparent;
+  color: #111;
+
+  padding: 10px 18px;
+  border-radius: 10px;
+
+  font-size: 20px;
+  font-weight: 900;
+
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.ong-nav-links a:hover,
+.ong-nav-links button:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+  color: #111;
+  transform: scale(1.08);
+}
+
+.action-card {
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.action-card:hover {
+  transform: scale(1.03);
+  filter: brightness(0.95);
+}
+
+
+/* Seção de agradecimento */
+
+.thanks-section {
+  min-height: 300px;
+  background-color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 50px 90px;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.thanks-text {
+  width: 35%;
+  z-index: 2;
+}
+
+.thanks-text h2 {
+  color: #009688;
+  font-size: 34px;
+  line-height: 36px;
+  margin-bottom: 15px;
+}
+
+.thanks-text p {
+  color: #333;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.thanks-illustration {
+  width: 55%;
+  height: 230px;
+
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.box {
+  position: absolute;
+
+  background-color: #c96531;
+  border-radius: 8px 8px 0 0;
+
+  box-shadow: inset -12px 0 rgba(0, 0, 0, 0.08);
+}
+
+.box::before {
+  content: "";
+  position: absolute;
+
+  width: 100%;
+  height: 35px;
+
+  background-color: #e77d3b;
+
+  top: -28px;
+  left: 0;
+
+  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+}
+
+.box-one {
+  width: 120px;
+  height: 100px;
+  left: 120px;
+  bottom: 0;
+}
+
+.box-two {
+  width: 150px;
+  height: 135px;
+  left: 235px;
+  bottom: 0;
+}
+
+.box-three {
+  width: 170px;
+  height: 120px;
+  left: 370px;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box-three span {
+  background-color: white;
+  color: #333;
+
+  padding: 5px 18px;
+
+  font-size: 18px;
+  font-weight: bold;
+
+  transform: rotate(-8deg);
+}
+
+.heart {
+  position: absolute;
+
+  width: 45px;
+  height: 45px;
+
+  background-color: #e95786;
+
+  transform: rotate(-45deg);
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+
+  width: 45px;
+  height: 45px;
+
+  background-color: #e95786;
+
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -22px;
+  left: 0;
+}
+
+.heart::after {
+  left: 22px;
+  top: 0;
+}
+
+.heart-one {
+  top: 35px;
+  left: 280px;
+}
+
+.heart-two {
+  top: 70px;
+  left: 390px;
+  transform: rotate(-30deg) scale(1.2);
+}
+
+/* Rodapé */
+
+.ong-footer {
+  min-height: 260px;
+  background-color: #009688;
+  color: white;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  gap: 35px;
+
+  padding: 55px 90px;
+
+  scroll-margin-top: 90px;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-column h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.footer-column button {
+  background: none;
+  border: none;
+
+  color: white;
+
+  padding: 0;
+  margin-bottom: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  text-align: left;
+}
+
+.footer-column button:hover {
+  text-decoration: underline;
+  transform: scale(1.03);
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.footer-brand h2 {
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.footer-icons {
+  display: flex;
+  gap: 18px;
+  font-size: 22px;
+}
+
+.footer-icons span {
+  cursor: pointer;
+}
