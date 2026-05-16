@@ -1,0 +1,500 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.ong-home-page {
+  min-height: 100vh;
+  padding-top: 80px;
+  background-color: #f4f4f4;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+.ong-navbar {
+  width: 100%;
+  height: 80px;
+  background-color: #ffae2b;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 80px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ong-logo {
+  color: white;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.ong-nav-links {
+  display: flex;
+  gap: 90px;
+  align-items: center;
+}
+
+.ong-nav-links a,
+.ong-nav-links button {
+  background: none;
+  border: none;
+
+  text-decoration: none;
+  color: #111;
+
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.ong-nav-links a:hover,
+.ong-nav-links button:hover {
+  color: white;
+}
+
+.ong-profile-circle {
+  width: 52px;
+  height: 52px;
+
+  background-color: #009eb8;
+  border-radius: 50%;
+  border: none;
+
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.ong-profile-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ong-profile-circle:hover {
+  background-color: #007f94;
+}
+
+.ong-hero {
+  min-height: 360px;
+  background-color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 40px 80px;
+}
+
+.ong-hero-text {
+  width: 45%;
+}
+
+.ong-location {
+  color: #009688;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.ong-hero-text h1 {
+  color: #009688;
+  font-size: 42px;
+  line-height: 42px;
+  margin-bottom: 15px;
+}
+
+.ong-hero-text p {
+  font-size: 15px;
+  line-height: 22px;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.ong-hero-text button {
+  background-color: #009688;
+  color: white;
+
+  border: none;
+  border-radius: 4px;
+
+  padding: 12px 25px;
+
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.ong-hero-image {
+  width: 45%;
+  display: flex;
+  justify-content: center;
+}
+
+.ong-hero-image img {
+  width: 360px;
+}
+
+.ong-info-section {
+  min-height: 380px;
+
+  display: flex;
+  align-items: center;
+
+  background-color: #eeeeee;
+}
+
+.ong-info-image {
+  width: 55%;
+  height: 380px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #eeeeee;
+  overflow: hidden;
+}
+
+.ong-info-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ong-info-text {
+  width: 45%;
+  padding: 40px;
+}
+
+.ong-info-text p {
+  color: #009688;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.ong-info-text h2 {
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+.ong-info-text span {
+  font-size: 14px;
+  line-height: 22px;
+  color: #333;
+}
+
+.ong-actions {
+  display: flex;
+  width: 100%;
+  height: 140px;
+}
+
+.action-card {
+  flex: 1;
+
+  border: none;
+
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding-left: 35px;
+  gap: 8px;
+
+  cursor: pointer;
+  text-align: left;
+}
+
+.action-card span {
+  font-size: 30px;
+}
+
+.teal {
+  background-color: #009688;
+}
+
+.blue {
+  background-color: #08a9dc;
+}
+
+.orange {
+  background-color: #ffae2b;
+}
+
+.action-card:hover {
+  filter: brightness(0.95);
+}
+
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 30;
+}
+
+.modal-box {
+  width: 420px;
+  background-color: white;
+
+  border-radius: 12px;
+  padding: 25px;
+
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-box h2 {
+  margin-bottom: 15px;
+  color: #009688;
+}
+
+.modal-box p {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.modal-box button {
+  margin-top: 15px;
+
+  background-color: #009688;
+  color: white;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 10px 20px;
+
+  cursor: pointer;
+}
+
+/* Página de perfil da ONG */
+
+.profile-page {
+  min-height: 100vh;
+  padding-top: 80px;
+  background-color: #eeeeee;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.profile-container {
+  width: 88%;
+  min-height: 520px;
+  margin: 45px auto;
+  background-color: #f4f4f4;
+  padding: 45px 55px;
+  position: relative;
+  border-radius: 4px;
+}
+
+.profile-close {
+  position: absolute;
+  top: 25px;
+  right: 35px;
+
+  background: none;
+  border: none;
+
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 35px;
+  margin-bottom: 35px;
+}
+
+.profile-image-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 160px;
+}
+
+.profile-image-area img {
+  width: 150px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.profile-image-placeholder {
+  width: 150px;
+  height: 120px;
+  background-color: #08a9dc;
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 50px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.profile-image-button {
+  background-color: #08a9dc;
+  color: white;
+
+  padding: 8px 12px;
+  border-radius: 6px;
+
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.profile-image-button input {
+  display: none;
+}
+
+.profile-title-area {
+  width: 65%;
+}
+
+.profile-title-area h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.profile-title-area textarea {
+  width: 100%;
+  min-height: 90px;
+
+  border: none;
+  background-color: transparent;
+
+  resize: none;
+  outline: none;
+
+  font-size: 15px;
+  line-height: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.profile-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px 20px;
+}
+
+.profile-input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-input-group.full {
+  grid-column: span 2;
+}
+
+.profile-input-group label {
+  font-size: 13px;
+  margin-left: 12px;
+  margin-bottom: -7px;
+  background-color: #f4f4f4;
+  width: fit-content;
+  padding: 0 6px;
+  z-index: 1;
+}
+
+.profile-input-group input {
+  height: 50px;
+
+  border-radius: 8px;
+  border: 1px solid #222;
+
+  background-color: transparent;
+
+  padding: 10px;
+  outline: none;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-top: 35px;
+}
+
+.profile-save-button {
+  background-color: #08a9dc;
+  color: white;
+
+  border: none;
+  border-radius: 12px;
+
+  padding: 14px 28px;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.profile-disconnect-button {
+  background-color: #ff3b3b;
+  color: white;
+
+  border: none;
+  border-radius: 12px;
+
+  padding: 14px 28px;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.disconnect-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.disconnect-modal-buttons button:first-child {
+  background-color: #ff3b3b;
+}
+
+.disconnect-modal-buttons button:last-child {
+  background-color: #777;
+}

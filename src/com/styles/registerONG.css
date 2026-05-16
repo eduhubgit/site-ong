@@ -1,0 +1,286 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.register-page {
+  width: 100%;
+  height: 100vh;
+  background-color: #dfe1e6;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shape-orange,
+.shape-blue {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.top-left-orange {
+  width: 450px;
+  height: 250px;
+  background-color: #ffaf2f;
+  top: -120px;
+  left: -80px;
+}
+
+.top-right-blue {
+  width: 400px;
+  height: 300px;
+  background-color: #08a9dc;
+  top: -140px;
+  right: -100px;
+}
+
+.bottom-left-blue {
+  width: 500px;
+  height: 300px;
+  background-color: #08a9dc;
+  bottom: -180px;
+  left: -120px;
+}
+
+.bottom-right-orange {
+  width: 400px;
+  height: 250px;
+  background-color: #ffaf2f;
+  bottom: -150px;
+  right: -120px;
+}
+
+.register-container {
+  width: 90%;
+  height: 82vh;
+  background-color: #eeeeee;
+  border-radius: 30px;
+  padding: 25px 35px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.register-top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.register-top select {
+  width: 110px;
+  padding: 8px;
+  border: none;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.register-content {
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.register-left {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-left: 20px;
+}
+
+.register-left h1 {
+  font-size: 32px;
+  margin-bottom: 5px;
+  color: #1c1c1c;
+}
+
+.row-inputs {
+  display: flex;
+  gap: 15px;
+}
+
+.input-group-register {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group-register label {
+  font-size: 12px;
+  margin-left: 10px;
+  margin-bottom: -7px;
+  background-color: #eeeeee;
+  width: fit-content;
+  padding: 0 5px;
+  z-index: 1;
+}
+
+.input-group-register input {
+  height: 38px;
+  border-radius: 7px;
+  border: 1px solid #222;
+  background-color: transparent;
+  padding: 8px;
+  outline: none;
+}
+
+.register-left button {
+  height: 45px;
+  border: none;
+  border-radius: 12px;
+  background-color: #08a9dc;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.login-link {
+  font-size: 12px;
+  color: #555;
+}
+
+.login-link a {
+  color: #222;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-right {
+  width: 45%;
+  display: flex;
+  justify-content: center;
+}
+
+.register-right img {
+  width: 370px;
+}
+
+.input-group-register textarea {
+  min-height: 75px;
+  border-radius: 7px;
+  border: 1px solid #222;
+  background-color: transparent;
+  padding: 10px;
+  outline: none;
+  resize: none;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.register-image-preview {
+  width: 90px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+
+.register-container {
+  height: 88vh;
+  padding: 20px 35px;
+}
+
+.register-content {
+  height: 100%;
+  align-items: flex-start;
+}
+
+.register-left {
+  gap: 8px;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.register-left h1 {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.input-group-register input {
+  height: 32px;
+  font-size: 13px;
+  padding: 6px 8px;
+}
+
+.input-group-register label {
+  font-size: 11px;
+}
+
+.input-group-register textarea {
+  min-height: 55px;
+  font-size: 13px;
+  padding: 8px;
+}
+
+.row-inputs {
+  gap: 12px;
+}
+
+.register-left button {
+  height: 40px;
+  font-size: 15px;
+}
+
+.register-image-preview {
+  width: 75px;
+  height: 55px;
+}
+
+.login-link {
+  font-size: 11px;
+}
+
+.register-right img {
+  width: 320px;
+}
+
+.register-right {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-right img {
+  width: 320px;
+  margin-top: 40px;
+}
+
+
+
+
+.register-image-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.remove-image-button {
+  width: fit-content;
+  height: 32px;
+
+  padding: 6px 12px;
+
+  border: none;
+  border-radius: 8px;
+
+  background-color: #ff3b3b;
+  color: white;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.remove-image-button:hover {
+  background-color: #d92f2f;
+}
