@@ -6,26 +6,64 @@ import loginImage from "../assets/login-image.png";
 function Login() {
   const navigate = useNavigate();
 
+  const [tipoLogin, setTipoLogin] = useState("ong");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   const fazerLogin = () => {
-    const ongsSalvas = JSON.parse(localStorage.getItem("ongsCadastradas")) || [];
+    if (tipoLogin === "ong") {
+      const ongsSalvas =
+        JSON.parse(localStorage.getItem("ongsCadastradas")) || [];
 
-    const ongEncontrada = ongsSalvas.find(
-      (ong) =>
-        ong.email === email.trim().toLowerCase() &&
-        ong.senha === senha
-    );
+      const ongEncontrada = ongsSalvas.find(
+        (ong) =>
+          ong.email === email.trim().toLowerCase() &&
+          ong.senha === senha
+      );
 
-    if (ongEncontrada) {
-      localStorage.setItem("ongLogada", JSON.stringify(ongEncontrada));
+      if (ongEncontrada) {
+        localStorage.setItem("ongLogada", JSON.stringify(ongEncontrada));
+        localStorage.removeItem("usuarioLogado");
 
-      alert("Login realizado com sucesso!");
+        alert("Login de ONG realizado com sucesso!");
+        navigate("/home");
+      } else {
+        alert("E-mail ou senha de ONG incorretos.");
+      }
 
-      navigate("/home");
+      return;
+    }
+
+    if (tipoLogin === "usuario") {
+      const usuariosSalvos =
+        JSON.parse(localStorage.getItem("usuariosCadastrados")) || [];
+
+      const usuarioEncontrado = usuariosSalvos.find(
+        (usuario) =>
+          usuario.email === email.trim().toLowerCase() &&
+          usuario.senha === senha
+      );
+
+      if (usuarioEncontrado) {
+        localStorage.setItem(
+          "usuarioLogado",
+          JSON.stringify(usuarioEncontrado)
+        );
+        localStorage.removeItem("ongLogada");
+
+        alert("Login de usuário realizado com sucesso!");
+        navigate("/usuario-home");
+      } else {
+        alert("E-mail ou senha de usuário incorretos.");
+      }
+    }
+  };
+
+  const irParaCadastro = () => {
+    if (tipoLogin === "ong") {
+      navigate("/register");
     } else {
-      alert("E-mail ou senha incorretos.");
+      navigate("/register-user");
     }
   };
 
@@ -35,6 +73,18 @@ function Login() {
       <div className="background-shape bottom-right"></div>
 
       <div className="login-container">
+        <div className="login-type-card">
+          <label>Entrar como</label>
+
+          <select
+            value={tipoLogin}
+            onChange={(evento) => setTipoLogin(evento.target.value)}
+          >
+            <option value="ong">ONG</option>
+            <option value="usuario">Usuário</option>
+          </select>
+        </div>
+
         <div className="login-content">
           <div className="login-left">
             <h1>Login</h1>
@@ -66,11 +116,19 @@ function Login() {
               <a href="#">Esqueceu a senha?</a>
             </div>
 
-            <button onClick={fazerLogin}>Entrar</button>
+            <button type="button" onClick={fazerLogin}>
+              Entrar
+            </button>
 
             <p className="register-text">
               Ainda não tem uma conta?
-              <Link to="/register"> Crie uma</Link>
+              <button
+                type="button"
+                className="create-account-link"
+                onClick={irParaCadastro}
+              >
+                Crie uma
+              </button>
             </p>
           </div>
 

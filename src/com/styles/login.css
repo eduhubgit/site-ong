@@ -179,3 +179,56 @@ body {
 .login-right img {
   width: 450px;
 }
+
+.login-container {
+  position: relative;
+}
+
+.login-type-card {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+
+  background-color: white;
+
+  padding: 10px 14px;
+
+  border-radius: 12px;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  z-index: 5;
+}
+
+.login-type-card label {
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+}
+
+.login-type-card select {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+
+  padding: 8px;
+
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.create-account-link {
+  background: none;
+  border: none;
+
+  color: #ff8c00;
+
+  font-weight: bold;
+  cursor: pointer;
+
+  padding: 0;
+  margin-left: 5px;
+}
