@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ongHome.css";
-
 import heroImage from "../assets/login-image.png";
 import donationPhoto from "../assets/donation-photo.jpg";
 

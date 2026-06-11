@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../styles/login.css";
 import loginImage from "../assets/login-image.png";
+import fundoImage from "../../assets/fundo.png";
 
 function Login() {
   const navigate = useNavigate();
@@ -69,8 +70,8 @@ function Login() {
 
   return (
     <div className="login-page">
-      <div className="background-shape top-left"></div>
-      <div className="background-shape bottom-right"></div>
+      <img src={fundoImage} alt="Fundo" className="bg-full-image" />
+      
 
       <div className="login-container">
         <div className="login-type-card">

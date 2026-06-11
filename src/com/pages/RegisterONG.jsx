@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState , useRef } from "react";
 import "../styles/registerONG.css";
 import loginImage from "../assets/login-image.png";
+import fundoImage from "../../assets/fundo.png";
+
 
 function RegisterONG() {
   const navigate = useNavigate();
@@ -101,12 +103,17 @@ const removerImagem = () => {
 
   return (
     <div className="register-page">
-      <div className="shape-orange top-left-orange"></div>
-      <div className="shape-blue top-right-blue"></div>
-      <div className="shape-blue bottom-left-blue"></div>
-      <div className="shape-orange bottom-right-orange"></div>
+      <img src={fundoImage} alt="Fundo" className="bg-full-image" />
 
       <div className="register-container">
+        <div className="register-top">
+          <label>Entrar como</label>
+          <select onChange={(e) => e.target.value === 'usuario' && navigate('/register-user')}>
+            <option value="ong">ONG</option>
+            <option value="usuario">Usuário</option>
+          </select>
+        </div>
+
         <div className="register-content">
           <form className="register-left" onSubmit={cadastrarONG}>
             <h1>Cadastrar ONG</h1>
@@ -186,6 +193,7 @@ const removerImagem = () => {
                 accept="image/*"
                 onChange={carregarImagem}
                 ref={imagemInputRef}
+                className="file-input"
               />
             </div>
 
@@ -220,7 +228,7 @@ const removerImagem = () => {
               ></textarea>
             </div>
 
-            <button type="submit">Criar ONG</button>
+            <button type="submit" className="btn-criar-ong">Criar ONG</button>
 
             <p className="login-link">
               Já tem uma conta? <Link to="/">Entrar</Link>
