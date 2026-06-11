@@ -9,6 +9,11 @@ function UserProfile() {
 
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
   const [mostrarNormas, setMostrarNormas] = useState(false);
+  const [mostrarHistorico, setMostrarHistorico] = useState(false);
+
+  const contribuicoes = (JSON.parse(localStorage.getItem("contribuicoesMonetarias")) || []).filter(
+    (c) => c.emailDoador === usuarioLogado?.email
+  );
 
   const [perfil, setPerfil] = useState(
     usuarioLogado || {
@@ -207,6 +212,14 @@ function UserProfile() {
         <div className="profile-actions">
           <button
             type="button"
+            className="profile-history-button"
+            onClick={() => setMostrarHistorico(true)}
+          >
+            Histórico de doações
+          </button>
+
+          <button
+            type="button"
             className="profile-save-button"
             onClick={salvarAlteracoes}
           >
@@ -265,6 +278,57 @@ function UserProfile() {
             <button type="button" onClick={() => setMostrarNormas(false)}>
               Fechar
             </button>
+          </div>
+        </div>
+      )}
+
+      {mostrarHistorico && (
+        <div className="modal-background" onClick={() => setMostrarHistorico(false)}>
+          <div className="modal-box modal-historico" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="modal-close-btn"
+              onClick={() => setMostrarHistorico(false)}
+            >
+              ×
+            </button>
+
+            <h2>Histórico de doações</h2>
+
+            {contribuicoes.length === 0 ? (
+              <p className="historico-vazio">Você ainda não fez nenhuma contribuição monetária.</p>
+            ) : (
+              <div className="historico-lista">
+                {contribuicoes.map((c) => (
+                  <div className="historico-item" key={c.id}>
+                    <div className="historico-col">
+                      <span className="historico-label">Doação:</span>
+                      <span className="historico-valor">R$ {c.valor},00 — {c.nomeOng}</span>
+                    </div>
+                    <div className="historico-col">
+                      <span className="historico-label">Data de publicação:</span>
+                      <span className="historico-valor">{c.data}</span>
+                    </div>
+                    <div className="historico-col">
+                      <span className="historico-label">Status:</span>
+                      <span className={`historico-status historico-status-${c.status === 'Comprovado' ? 'comprovado' : 'aguardando'}`}>
+                        {c.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="historico-footer">
+              <button
+                type="button"
+                className="btn-voltar-historico"
+                onClick={() => setMostrarHistorico(false)}
+              >
+                Voltar
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -415,3 +415,433 @@
   background-color: #777;
   color: white;
 }
+
+/* ---- Updated card buttons ---- */
+
+.btn-pedidos {
+  background-color: #08a9dc;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: filter 0.2s;
+}
+
+.btn-pedidos:hover {
+  filter: brightness(0.9);
+}
+
+.btn-contribuir {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #009688;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: filter 0.2s;
+}
+
+.btn-contribuir:hover {
+  filter: brightness(0.9);
+}
+
+.contribuir-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.user-need-description {
+  font-size: 13px;
+  color: #555;
+  line-height: 19px;
+  flex: 1;
+  margin-bottom: 8px;
+}
+
+/* ---- Modal shared close button ---- */
+
+.modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #555;
+  margin-top: 0 !important;
+  padding: 0;
+}
+
+/* ---- ONG Details Modal ---- */
+
+.modal-ong-details {
+  width: 500px;
+  position: relative;
+  padding: 28px 30px 24px;
+}
+
+.modal-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px !important;
+}
+
+.modal-ong-header {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.modal-ong-image {
+  width: 130px;
+  height: 130px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #08a9dc;
+}
+
+.modal-ong-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-ong-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.modal-ong-info {
+  flex: 1;
+}
+
+.modal-ong-info h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #111;
+}
+
+.modal-ong-info p {
+  font-size: 13px;
+  line-height: 19px;
+  color: #444;
+  margin-bottom: 16px;
+}
+
+.modal-ong-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-disclaimer {
+  font-size: 11px !important;
+  color: #999 !important;
+  line-height: 15px !important;
+  margin-bottom: 0 !important;
+}
+
+/* ---- Monetary Contribution Modal ---- */
+
+.modal-contribuicao {
+  width: 420px;
+  position: relative;
+  padding: 30px;
+}
+
+.modal-contribuicao h2 {
+  font-size: 20px;
+  color: #111;
+  margin-bottom: 22px;
+}
+
+.valores-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.valor-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 16px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, transform 0.15s;
+  min-height: 80px;
+}
+
+.valor-btn:hover {
+  border-color: #009688;
+  transform: scale(1.03);
+}
+
+.valor-btn-selecionado {
+  background-color: #009688;
+  border-color: #009688;
+  color: white;
+}
+
+.valor-btn-selecionado .valor-cifrao,
+.valor-btn-selecionado .valor-numero,
+.valor-btn-selecionado .valor-centavos {
+  color: white;
+}
+
+.valor-cifrao {
+  font-size: 11px;
+  color: #555;
+  align-self: flex-start;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.valor-numero {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111;
+  line-height: 1;
+}
+
+.valor-centavos {
+  font-size: 13px;
+  font-weight: normal;
+  color: #555;
+}
+
+.btn-confirmar-contribuicao {
+  width: 100%;
+  background-color: #009688;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.btn-confirmar-contribuicao:hover {
+  filter: brightness(0.9);
+}
+
+/* ---- Success Modal ---- */
+
+.modal-sucesso {
+  width: 320px;
+  position: relative;
+  padding: 35px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+
+.sucesso-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #009688;
+  color: white;
+  font-size: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+  animation: popIn 0.35s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-sucesso h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #111;
+}
+
+.modal-sucesso p {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 22px;
+}
+
+.btn-pornada {
+  width: 100%;
+  background-color: #08a9dc;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: filter 0.2s;
+}
+
+.btn-pornada:hover {
+  filter: brightness(0.9);
+}
+
+.btn-fechar-sucesso {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.btn-fechar-sucesso:hover {
+  text-decoration: underline;
+}
+
+/* ---- Donation History Modal ---- */
+
+.modal-historico {
+  width: 680px;
+  max-height: 75vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 35px 40px 28px;
+}
+
+.modal-historico h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+.historico-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.historico-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.historico-item:last-child {
+  border-bottom: none;
+}
+
+.historico-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.historico-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #888;
+}
+
+.historico-valor {
+  font-size: 14px;
+  color: #222;
+}
+
+.historico-status {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.historico-status-comprovado {
+  color: #009688;
+}
+
+.historico-status-aguardando {
+  color: #e09000;
+}
+
+.historico-vazio {
+  color: #888;
+  font-size: 15px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.historico-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-voltar-historico {
+  background-color: #009688;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 28px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: filter 0.2s;
+  margin-top: 0 !important;
+}
+
+.btn-voltar-historico:hover {
+  filter: brightness(0.9);
+}
+
+/* ---- Profile history button ---- */
+
+.profile-history-button {
+  background-color: #ffae2b;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.profile-history-button:hover {
+  filter: brightness(0.92);
+}

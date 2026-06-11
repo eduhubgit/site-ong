@@ -15,6 +15,14 @@ function UserHome() {
 
   const [pesquisa, setPesquisa] = useState("");
 
+  // Modal states
+  const [ongSelecionada, setOngSelecionada] = useState(null);
+  const [publicacaoSelecionada, setPublicacaoSelecionada] = useState(null);
+  const [mostrarDetalhesOng, setMostrarDetalhesOng] = useState(false);
+  const [mostrarContribuicao, setMostrarContribuicao] = useState(false);
+  const [mostrarSucesso, setMostrarSucesso] = useState(false);
+  const [valorSelecionado, setValorSelecionado] = useState(null);
+
   const categorias = [
     "Alimentos",
     "Produtos de limpeza",
@@ -59,6 +67,71 @@ function UserHome() {
       publicacao.categorias.includes(categoria)
     );
   };
+
+  const abrirDetalhesOng = (publicacao) => {
+    setPublicacaoSelecionada(publicacao);
+    setOngSelecionada(publicacao.ong);
+    setMostrarDetalhesOng(true);
+  };
+
+  const fecharDetalhesOng = () => {
+    setMostrarDetalhesOng(false);
+    setOngSelecionada(null);
+    setPublicacaoSelecionada(null);
+  };
+
+  const abrirContribuicao = (publicacao) => {
+    setPublicacaoSelecionada(publicacao);
+    setOngSelecionada(publicacao.ong);
+    setValorSelecionado(null);
+    setMostrarDetalhesOng(false);
+    setMostrarContribuicao(true);
+  };
+
+  const confirmarContribuicao = () => {
+    if (!valorSelecionado) {
+      alert("Selecione um valor para contribuir.");
+      return;
+    }
+
+    if (!usuarioLogado) {
+      alert("Você precisa estar logado para contribuir.");
+      navigate("/");
+      return;
+    }
+
+    const contribuicoesSalvas =
+      JSON.parse(localStorage.getItem("contribuicoesMonetarias")) || [];
+
+    const novaContribuicao = {
+      id: Date.now(),
+      publicacaoId: publicacaoSelecionada?.id || null,
+      nomeOng: ongSelecionada?.nome || "",
+      nomeDoador: usuarioLogado.nome,
+      emailDoador: usuarioLogado.email,
+      valor: valorSelecionado,
+      data: new Date().toLocaleDateString("pt-BR"),
+      status: "Comprovado",
+    };
+
+    const listaAtualizada = [...contribuicoesSalvas, novaContribuicao];
+    localStorage.setItem(
+      "contribuicoesMonetarias",
+      JSON.stringify(listaAtualizada)
+    );
+
+    setMostrarContribuicao(false);
+    setMostrarSucesso(true);
+  };
+
+  const fecharSucesso = () => {
+    setMostrarSucesso(false);
+    setValorSelecionado(null);
+    setPublicacaoSelecionada(null);
+    setOngSelecionada(null);
+  };
+
+  const valoresContribuicao = [5, 10, 25, 50];
 
   return (
     <div className="user-home-page">
@@ -170,29 +243,28 @@ function UserHome() {
                         {publicacao.ong.localizacao}
                       </p>
 
-                      <div className="user-need-items">
-                        {publicacao.itens.map((item) => (
-                          <p key={item.id}>
-                            <strong>{item.nome}</strong> - {item.quantidade}
-                          </p>
-                        ))}
-                      </div>
+                      <p className="user-need-description">
+                        {publicacao.ong.sobre
+                          ? publicacao.ong.sobre.substring(0, 120) +
+                            (publicacao.ong.sobre.length > 120 ? "..." : "")
+                          : "Organização dedicada a ajudar quem mais precisa."}
+                      </p>
 
                       <div className="user-need-buttons">
                         <button
                           type="button"
-                          onClick={() => navigate(`/doar/${publicacao.id}`)}
+                          className="btn-pedidos"
+                          onClick={() => abrirDetalhesOng(publicacao)}
                         >
-                          Doar
+                          Pedidos
                         </button>
 
                         <button
                           type="button"
-                          onClick={() =>
-                            navigate(`/contribuir/${publicacao.id}`)
-                          }
+                          className="btn-contribuir"
+                          onClick={() => abrirContribuicao(publicacao)}
                         >
-                          Contribuir
+                          <span className="contribuir-icon">$</span> Contribuir
                         </button>
                       </div>
                     </div>
@@ -213,6 +285,161 @@ function UserHome() {
           </div>
         )}
       </main>
+
+      {/* Modal: Detalhes da ONG */}
+      {mostrarDetalhesOng && ongSelecionada && publicacaoSelecionada && (
+        <div className="modal-background" onClick={fecharDetalhesOng}>
+          <div
+            className="modal-box modal-ong-details"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="modal-close-btn"
+              onClick={fecharDetalhesOng}
+            >
+              ×
+            </button>
+
+            <p className="modal-label">Detalhes de ONG</p>
+
+            <div className="modal-ong-header">
+              <div className="modal-ong-image">
+                {ongSelecionada.imagem ? (
+                  <img src={ongSelecionada.imagem} alt={ongSelecionada.nome} />
+                ) : (
+                  <div className="modal-ong-placeholder">
+                    {ongSelecionada.nome.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+
+              <div className="modal-ong-info">
+                <h2>{ongSelecionada.nome}</h2>
+                <p>
+                  {ongSelecionada.sobre ||
+                    "O projeto atua no combate à insegurança alimentar, distribuindo alimentos para famílias em situação de vulnerabilidade. Sua contribuição ajuda a levar dignidade, nutrição e esperança para quem mais precisa."}
+                </p>
+
+                <div className="modal-ong-actions">
+                  <button
+                    type="button"
+                    className="btn-pedidos"
+                    onClick={() => {
+                      fecharDetalhesOng();
+                      navigate(`/doar/${publicacaoSelecionada.id}`);
+                    }}
+                  >
+                    Pedidos
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-contribuir"
+                    onClick={() => abrirContribuicao(publicacaoSelecionada)}
+                  >
+                    <span className="contribuir-icon">$</span> Contribuir
+                  </button>
+                </div>
+
+                <p className="modal-disclaimer">
+                  *A Contribuição serve para doar dinheiro à ONG a qualquer
+                  momento.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Contribuição monetária */}
+      {mostrarContribuicao && ongSelecionada && (
+        <div
+          className="modal-background"
+          onClick={() => setMostrarContribuicao(false)}
+        >
+          <div
+            className="modal-box modal-contribuicao"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="modal-close-btn"
+              onClick={() => setMostrarContribuicao(false)}
+            >
+              ×
+            </button>
+
+            <h2>Contribuir monetariamente</h2>
+
+            <div className="valores-grid">
+              {valoresContribuicao.map((valor) => (
+                <button
+                  key={valor}
+                  type="button"
+                  className={`valor-btn ${
+                    valorSelecionado === valor ? "valor-btn-selecionado" : ""
+                  }`}
+                  onClick={() => setValorSelecionado(valor)}
+                >
+                  <span className="valor-cifrao">R$</span>
+                  <span className="valor-numero">
+                    {valor}
+                    <span className="valor-centavos">,00</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className="btn-confirmar-contribuicao"
+              onClick={confirmarContribuicao}
+            >
+              Contribuir
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Sucesso */}
+      {mostrarSucesso && (
+        <div className="modal-background" onClick={fecharSucesso}>
+          <div
+            className="modal-box modal-sucesso"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="modal-close-btn"
+              onClick={fecharSucesso}
+            >
+              ×
+            </button>
+
+            <div className="sucesso-icon">✓</div>
+
+            <h2>Obrigado pela ajuda!</h2>
+            <p>Sua contribuição é de suma importância para a ONG.</p>
+
+            <button
+              type="button"
+              className="btn-pornada"
+              onClick={fecharSucesso}
+            >
+              Por nada!
+            </button>
+
+            <button
+              type="button"
+              className="btn-fechar-sucesso"
+              onClick={fecharSucesso}
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
