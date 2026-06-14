@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ProfileMenu from "../components/ProfileMenu";
 
 import "../styles/ongHome.css";
 import "../styles/createNeed.css";
@@ -8,9 +9,6 @@ function CreateNeed() {
   const navigate = useNavigate();
 
   const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
-
-  const nomeOng = ongLogada?.nome || "ONG";
-  const inicialPerfil = nomeOng.charAt(0).toUpperCase();
 
   const categorias = [
     "Alimentos",
@@ -31,6 +29,11 @@ function CreateNeed() {
   const [itens, setItens] = useState([]);
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
   const [mostrarNormas, setMostrarNormas] = useState(false);
+  const [mostrarSuporte, setMostrarSuporte] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const alterarCategoria = (categoria) => {
     if (categoriasSelecionadas.includes(categoria)) {
@@ -85,15 +88,16 @@ function CreateNeed() {
       return;
     }
 
-    if (categoriasSelecionadas.length === 0) {
-      alert("Não é possível publicar sem selecionar uma categoria.");
-      setMostrarConfirmacao(false);
-      return;
-    }
-
-    if (itens.length === 0) {
-      alert("Não é possível publicar sem adicionar pelo menos uma necessidade.");
-      setMostrarConfirmacao(false);
+    if (
+      !ongLogada.chavePix ||
+      !ongLogada.endereco ||
+      !ongLogada.diasFuncionamento ||
+      !ongLogada.horarioFuncionamento
+    ) {
+      alert(
+        "Complete o perfil da ONG com chave Pix, endereço e horário de funcionamento antes de publicar."
+      );
+      navigate("/perfil-ong");
       return;
     }
 
@@ -107,9 +111,21 @@ function CreateNeed() {
         nome: ongLogada.nome,
         email: ongLogada.email,
         cnpj: ongLogada.cnpj,
-        localizacao: ongLogada.localizacao,
-        nicho: ongLogada.nicho,
+
+        cidade: ongLogada.cidade || ongLogada.localizacao || "",
+        localizacao: ongLogada.cidade || ongLogada.localizacao || "",
+
+        endereco: ongLogada.endereco || "",
+
+        nichoPrincipal: ongLogada.nichoPrincipal || ongLogada.nicho || "",
+        nicho: ongLogada.nichoPrincipal || ongLogada.nicho || "",
+
+        chavePix: ongLogada.chavePix || "",
+        diasFuncionamento: ongLogada.diasFuncionamento || "",
+        horarioFuncionamento: ongLogada.horarioFuncionamento || "",
+
         imagem: ongLogada.imagem || "",
+        sobre: ongLogada.sobre || "",
       },
 
       categorias: categoriasSelecionadas,
@@ -143,27 +159,19 @@ function CreateNeed() {
 
         <div className="ong-nav-links">
           <button type="button" onClick={() => navigate("/home")}>
-            Home
+            Início
           </button>
 
           <button type="button" onClick={() => setMostrarNormas(true)}>
             Normas do site
           </button>
 
-          <button type="button">Suporte</button>
+          <button type="button" onClick={() => setMostrarSuporte(true)}>
+            Suporte
+          </button>
         </div>
 
-        <button
-          type="button"
-          className="ong-profile-circle"
-          onClick={() => navigate("/perfil-ong")}
-        >
-          {ongLogada?.imagem ? (
-            <img src={ongLogada.imagem} alt="Foto da ONG" />
-          ) : (
-            inicialPerfil
-          )}
-        </button>
+        <ProfileMenu tipo="ong" pessoa={ongLogada} />
       </nav>
 
       <main className="create-need-main">
@@ -201,6 +209,10 @@ function CreateNeed() {
           </div>
 
           <div className="need-form">
+            <p className="need-helper-text">
+    Escreva um item e a quantidade dele por vez e clique em <strong>ADD</strong>.
+    Repita o processo para adicionar mais itens à lista.
+  </p>
             <div className="need-input-group">
               <label>Necessidade</label>
               <input
@@ -248,10 +260,7 @@ function CreateNeed() {
                       <span>{item.quantidade}</span>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => removerItem(item.id)}
-                    >
+                    <button type="button" onClick={() => removerItem(item.id)}>
                       Remover
                     </button>
                   </li>
@@ -321,6 +330,31 @@ function CreateNeed() {
             <p>• Remova pedidos que já foram atendidos.</p>
 
             <button type="button" onClick={() => setMostrarNormas(false)}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {mostrarSuporte && (
+        <div className="modal-background">
+          <div className="modal-box">
+            <h2>Suporte</h2>
+
+            <p>
+              Caso tenha algum problema com nossa plataforma, entre em contato
+              conosco:
+            </p>
+
+            <p>
+              <strong>EMAIL:</strong> maiscom@gmail.com
+            </p>
+
+            <p>
+              <strong>Número:</strong> 4002-8922
+            </p>
+
+            <button type="button" onClick={() => setMostrarSuporte(false)}>
               Fechar
             </button>
           </div>

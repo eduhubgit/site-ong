@@ -1,26 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
 import heroImage from "../assets/login-image.png";
 import donationPhoto from "../assets/donation-photo.jpg";
 
 function ONGHome() {
   const navigate = useNavigate();
+
   const [mostrarNormas, setMostrarNormas] = useState(false);
+  const [mostrarSuporte, setMostrarSuporte] = useState(false);
 
   const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
 
   const nomeOng = ongLogada?.nome || "ONG";
-  const cidadeOng = ongLogada?.localizacao || "Ceará";
-  const inicialPerfil = nomeOng.charAt(0).toUpperCase();
-
-  const irParaRodape = () => {
-    const rodape = document.getElementById("rodape");
-
-    if (rodape) {
-      rodape.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const cidadeOng = ongLogada?.cidade || ongLogada?.localizacao || "Ceará";
 
   return (
     <div className="ong-home-page" id="topo">
@@ -28,25 +22,18 @@ function ONGHome() {
         <div className="ong-logo">+COM</div>
 
         <div className="ong-nav-links">
-          <a href="#topo">Home</a>
+          <a href="#topo">Início</a>
 
-          <button onClick={() => setMostrarNormas(true)}>
+          <button type="button" onClick={() => setMostrarNormas(true)}>
             Normas do site
           </button>
 
-          <button onClick={irParaRodape}>Suporte</button>
+          <button type="button" onClick={() => setMostrarSuporte(true)}>
+            Suporte
+          </button>
         </div>
 
-        <button
-          className="ong-profile-circle"
-          onClick={() => navigate("/perfil-ong")}
-        >
-          {ongLogada?.imagem ? (
-            <img src={ongLogada.imagem} alt="Foto da ONG" />
-          ) : (
-            inicialPerfil
-          )}
-        </button>
+        <ProfileMenu tipo="ong" pessoa={ongLogada} />
       </nav>
 
       <section className="ong-hero">
@@ -62,7 +49,10 @@ function ONGHome() {
             encontrem exatamente o que sua instituição precisa no momento.
           </p>
 
-          <button onClick={() => navigate("/publicar-necessidades")}>
+          <button
+            type="button"
+            onClick={() => navigate("/publicar-necessidades")}
+          >
             Publicar agora
           </button>
         </div>
@@ -91,21 +81,23 @@ function ONGHome() {
       </section>
 
       <section className="ong-actions">
-      <button
-       className="action-card teal"
-       onClick={() => navigate("/publicar-necessidades")}
-      >
-      <span>＋</span>
-      Publicar necessidades
-      </button>
+        <button
+          type="button"
+          className="action-card teal"
+          onClick={() => navigate("/publicar-necessidades")}
+        >
+          <span>＋</span>
+          Publicar necessidades
+        </button>
 
-      <  button
-      className="action-card blue"
-      onClick={() => navigate("/necessidades-publicadas")}
-      >
-      <span>▣</span>
-      Necessidades publicadas
-      </button>
+        <button
+          type="button"
+          className="action-card blue"
+          onClick={() => navigate("/necessidades-publicadas")}
+        >
+          <span>▣</span>
+          Necessidades publicadas
+        </button>
       </section>
 
       <section className="thanks-section">
@@ -133,11 +125,21 @@ function ONGHome() {
         <div className="footer-column">
           <h3>Links Rápidos</h3>
 
-          <button onClick={() => navigate("/home")}>Home</button>
-          <button onClick={() => navigate("/publicar-necessidades")}>
+          <button type="button" onClick={() => navigate("/home")}>
+            Início
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate("/publicar-necessidades")}
+          >
             Publicar necessidades
           </button>
-          <button onClick={() => navigate("/necessidades-publicadas")}>
+
+          <button
+            type="button"
+            onClick={() => navigate("/necessidades-publicadas")}
+          >
             Necessidades publicadas
           </button>
         </div>
@@ -145,20 +147,25 @@ function ONGHome() {
         <div className="footer-column">
           <h3>Ajuda</h3>
 
-          <button onClick={() => setMostrarNormas(true)}>
+          <button type="button" onClick={() => setMostrarNormas(true)}>
             Dúvidas frequentes
           </button>
-          <button>Comunidade</button>
-          <button>Suporte</button>
+
+          <button type="button">Comunidade</button>
+
+          <button type="button" onClick={() => setMostrarSuporte(true)}>
+            Suporte
+          </button>
         </div>
 
         <div className="footer-column">
           <h3>Termos e condições</h3>
 
-          <button onClick={() => setMostrarNormas(true)}>
+          <button type="button" onClick={() => setMostrarNormas(true)}>
             Normas do site
           </button>
-          <button>Termos legais</button>
+
+          <button type="button">Termos legais</button>
         </div>
 
         <div className="footer-brand">
@@ -188,7 +195,32 @@ function ONGHome() {
 
             <p>• Remova pedidos que já foram atendidos.</p>
 
-            <button onClick={() => setMostrarNormas(false)}>
+            <button type="button" onClick={() => setMostrarNormas(false)}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {mostrarSuporte && (
+        <div className="modal-background">
+          <div className="modal-box">
+            <h2>Suporte</h2>
+
+            <p>
+              Caso tenha algum problema com nossa plataforma, entre em contato
+              conosco:
+            </p>
+
+            <p>
+              <strong>EMAIL:</strong> maiscom@gmail.com
+            </p>
+
+            <p>
+              <strong>Número:</strong> 4002-8922
+            </p>
+
+            <button type="button" onClick={() => setMostrarSuporte(false)}>
               Fechar
             </button>
           </div>

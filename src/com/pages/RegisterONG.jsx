@@ -1,21 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState , useRef } from "react";
+import { useState, useRef } from "react";
 import "../styles/registerONG.css";
 import loginImage from "../assets/login-image.png";
 import fundoImage from "../../assets/fundo.png";
 
-
 function RegisterONG() {
   const navigate = useNavigate();
-
   const imagemInputRef = useRef(null);
+
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const [ong, setOng] = useState({
     nome: "",
     cnpj: "",
     email: "",
-    localizacao: "",
-    nicho: "",
+    cidade: "",
+    endereco: "",
+    nichoPrincipal: "",
+    chavePix: "",
+    diasFuncionamento: "",
+    horarioFuncionamento: "",
     senha: "",
     imagem: "",
     sobre: "",
@@ -30,50 +34,73 @@ function RegisterONG() {
     });
   };
 
-  const carregarImagem = (evento) => {
-  const arquivo = evento.target.files[0];
+  const mudarCNPJ = (evento) => {
+    const apenasNumeros = evento.target.value.replace(/\D/g, "").slice(0, 14);
 
-  if (!arquivo) {
-    return;
-  }
-
-  if (arquivo.size > 1000000) {
-    alert("A imagem é muito grande. Escolha uma imagem menor que 1MB.");
-    return;
-  }
-
-  const leitor = new FileReader();
-
-  leitor.onloadend = () => {
     setOng({
       ...ong,
-      imagem: leitor.result,
+      cnpj: apenasNumeros,
     });
   };
 
-  leitor.readAsDataURL(arquivo);
-};
+  const carregarImagem = (evento) => {
+    const arquivo = evento.target.files[0];
 
-const removerImagem = () => {
-  setOng({
-    ...ong,
-    imagem: "",
-  });
+    if (!arquivo) {
+      return;
+    }
 
-  if (imagemInputRef.current) {
-    imagemInputRef.current.value = "";
-  }
-};
+    if (arquivo.size > 1000000) {
+      alert("A imagem é muito grande. Escolha uma imagem menor que 1MB.");
+      return;
+    }
+
+    const leitor = new FileReader();
+
+    leitor.onloadend = () => {
+      setOng({
+        ...ong,
+        imagem: leitor.result,
+      });
+    };
+
+    leitor.readAsDataURL(arquivo);
+  };
+
+  const removerImagem = () => {
+    setOng({
+      ...ong,
+      imagem: "",
+    });
+
+    if (imagemInputRef.current) {
+      imagemInputRef.current.value = "";
+    }
+  };
 
   const cadastrarONG = (evento) => {
     evento.preventDefault();
+
+    if (ong.cnpj.length !== 14) {
+      alert("O CNPJ precisa ter exatamente 14 números.");
+      return;
+    }
 
     const novaONG = {
       nome: ong.nome.trim(),
       cnpj: ong.cnpj.trim(),
       email: ong.email.trim().toLowerCase(),
-      localizacao: ong.localizacao.trim(),
-      nicho: ong.nicho.trim(),
+
+      cidade: ong.cidade.trim(),
+      endereco: ong.endereco.trim(),
+      nichoPrincipal: ong.nichoPrincipal.trim(),
+      chavePix: ong.chavePix.trim(),
+      diasFuncionamento: ong.diasFuncionamento.trim(),
+      horarioFuncionamento: ong.horarioFuncionamento.trim(),
+
+      localizacao: ong.cidade.trim(),
+      nicho: ong.nichoPrincipal.trim(),
+
       senha: ong.senha,
       imagem: ong.imagem,
       sobre: ong.sobre.trim(),
@@ -95,6 +122,7 @@ const removerImagem = () => {
 
     localStorage.setItem("ongsCadastradas", JSON.stringify(listaAtualizada));
     localStorage.setItem("ongLogada", JSON.stringify(novaONG));
+    localStorage.removeItem("usuarioLogado");
 
     alert("ONG cadastrada com sucesso!");
 
@@ -108,7 +136,12 @@ const removerImagem = () => {
       <div className="register-container">
         <div className="register-top">
           <label>Entrar como</label>
-          <select onChange={(e) => e.target.value === 'usuario' && navigate('/register-user')}>
+
+          <select
+            onChange={(evento) =>
+              evento.target.value === "usuario" && navigate("/register-user")
+            }
+          >
             <option value="ong">ONG</option>
             <option value="usuario">Usuário</option>
           </select>
@@ -136,7 +169,9 @@ const removerImagem = () => {
                   type="text"
                   name="cnpj"
                   value={ong.cnpj}
-                  onChange={mudarCampo}
+                  onChange={mudarCNPJ}
+                  maxLength="14"
+                  placeholder="Somente números"
                   required
                 />
               </div>
@@ -153,37 +188,99 @@ const removerImagem = () => {
               />
             </div>
 
+            <div className="row-inputs">
+              <div className="input-group-register">
+                <label>Cidade</label>
+                <input
+                  type="text"
+                  name="cidade"
+                  value={ong.cidade}
+                  onChange={mudarCampo}
+                  required
+                />
+              </div>
+
+              <div className="input-group-register">
+                <label>Endereço</label>
+                <input
+                  type="text"
+                  name="endereco"
+                  value={ong.endereco}
+                  onChange={mudarCampo}
+                  required
+                />
+              </div>
+            </div>
+
             <div className="input-group-register">
-              <label>Localização</label>
+              <label>Nicho principal</label>
               <input
                 type="text"
-                name="localizacao"
-                value={ong.localizacao}
+                name="nichoPrincipal"
+                value={ong.nichoPrincipal}
                 onChange={mudarCampo}
                 required
               />
             </div>
 
             <div className="input-group-register">
-              <label>Nicho</label>
+              <label>Chave Pix</label>
               <input
                 type="text"
-                name="nicho"
-                value={ong.nicho}
+                name="chavePix"
+                value={ong.chavePix}
                 onChange={mudarCampo}
+                placeholder="CPF, CNPJ, e-mail, telefone ou chave aleatória"
                 required
               />
+            </div>
+
+            <div className="row-inputs">
+              <div className="input-group-register">
+                <label>Dias de funcionamento</label>
+                <input
+                  type="text"
+                  name="diasFuncionamento"
+                  value={ong.diasFuncionamento}
+                  onChange={mudarCampo}
+                  placeholder="Ex: Segunda a sexta"
+                  required
+                />
+              </div>
+
+              <div className="input-group-register">
+                <label>Horário de funcionamento</label>
+                <input
+                  type="text"
+                  name="horarioFuncionamento"
+                  value={ong.horarioFuncionamento}
+                  onChange={mudarCampo}
+                  placeholder="Ex: 08:00 às 17:00"
+                  required
+                />
+              </div>
             </div>
 
             <div className="input-group-register">
               <label>Senha</label>
-              <input
-                type="password"
-                name="senha"
-                value={ong.senha}
-                onChange={mudarCampo}
-                required
-              />
+
+              <div className="password-input-area">
+                <input
+                  type={mostrarSenha ? "text" : "password"}
+                  name="senha"
+                  value={ong.senha}
+                  onChange={mudarCampo}
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="password-eye-button"
+                  onClick={() => setMostrarSenha(!mostrarSenha)}
+                >
+                  {mostrarSenha ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
 
             <div className="input-group-register">
@@ -199,24 +296,21 @@ const removerImagem = () => {
 
             {ong.imagem && (
               <div className="register-image-area">
-              <img
-                className="register-image-preview"
-                src={ong.imagem}
-                alt="Prévia da ONG"
-              />
+                <img
+                  className="register-image-preview"
+                  src={ong.imagem}
+                  alt="Prévia da ONG"
+                />
 
-    <button
-      type="button"
-      className="remove-image-button"
-      onClick={removerImagem}
-    >
-      Remover imagem
-    </button>
-  </div>
-)}
-            
-
-            
+                <button
+                  type="button"
+                  className="remove-image-button"
+                  onClick={removerImagem}
+                >
+                  Remover imagem
+                </button>
+              </div>
+            )}
 
             <div className="input-group-register">
               <label>Sobre a ONG</label>
@@ -225,10 +319,13 @@ const removerImagem = () => {
                 value={ong.sobre}
                 onChange={mudarCampo}
                 placeholder="Escreva um pequeno texto sobre a ONG..."
+                required
               ></textarea>
             </div>
 
-            <button type="submit" className="btn-criar-ong">Criar ONG</button>
+            <button type="submit" className="btn-criar-ong">
+              Criar ONG
+            </button>
 
             <p className="login-link">
               Já tem uma conta? <Link to="/">Entrar</Link>

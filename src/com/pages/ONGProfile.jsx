@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
 
 function ONGProfile() {
@@ -7,31 +8,37 @@ function ONGProfile() {
 
   const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
 
-  const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
   const [mostrarNormas, setMostrarNormas] = useState(false);
-
-  const irParaSuporte = () => {
-  navigate("/home");
-
-  setTimeout(() => {
-    const rodape = document.getElementById("rodape");
-
-    if (rodape) {
-      rodape.scrollIntoView({ behavior: "smooth" });
-    }
-  }, 100);
-};
+  const [mostrarSuporte, setMostrarSuporte] = useState(false);
+  const [editando, setEditando] = useState(false);
 
   const [perfil, setPerfil] = useState(
-    ongLogada || {
-      nome: "",
-      cnpj: "",
-      email: "",
-      localizacao: "",
-      nicho: "",
-      imagem: "",
-      sobre: "",
-    }
+    ongLogada
+      ? {
+          ...ongLogada,
+          cidade: ongLogada.cidade || ongLogada.localizacao || "",
+          endereco: ongLogada.endereco || "",
+          nichoPrincipal: ongLogada.nichoPrincipal || ongLogada.nicho || "",
+          chavePix: ongLogada.chavePix || "",
+          diasFuncionamento: ongLogada.diasFuncionamento || "",
+          horarioFuncionamento: ongLogada.horarioFuncionamento || "",
+          sobre: ongLogada.sobre || "",
+          imagem: ongLogada.imagem || "",
+        }
+      : {
+          nome: "",
+          cnpj: "",
+          email: "",
+          cidade: "",
+          endereco: "",
+          nichoPrincipal: "",
+          chavePix: "",
+          diasFuncionamento: "",
+          horarioFuncionamento: "",
+          senha: "",
+          imagem: "",
+          sobre: "",
+        }
   );
 
   if (!ongLogada) {
@@ -55,65 +62,164 @@ function ONGProfile() {
     });
   };
 
-  const carregarImagem = (evento) => {
-  const arquivo = evento.target.files[0];
+  const mudarCNPJ = (evento) => {
+    const apenasNumeros = evento.target.value.replace(/\D/g, "").slice(0, 14);
 
-  if (!arquivo) {
-    return;
-  }
-
-  if (arquivo.size > 1000000) {
-    alert("A imagem é muito grande. Escolha uma imagem menor que 1MB.");
-    return;
-  }
-
-  const leitor = new FileReader();
-
-  leitor.onloadend = () => {
     setPerfil({
       ...perfil,
-      imagem: leitor.result,
+      cnpj: apenasNumeros,
     });
   };
 
-  leitor.readAsDataURL(arquivo);
-};
+  const carregarImagem = (evento) => {
+    const arquivo = evento.target.files[0];
 
-  const salvarAlteracoes = () => {
-  try {
-    const ongsSalvas =
-      JSON.parse(localStorage.getItem("ongsCadastradas")) || [];
+    if (!arquivo) {
+      return;
+    }
 
-    const perfilAtualizado = {
-      ...perfil,
-      email: ongLogada.email,
-      senha: ongLogada.senha,
+    if (arquivo.size > 1000000) {
+      alert("A imagem é muito grande. Escolha uma imagem menor que 1MB.");
+      return;
+    }
+
+    const leitor = new FileReader();
+
+    leitor.onloadend = () => {
+      setPerfil({
+        ...perfil,
+        imagem: leitor.result,
+      });
     };
 
-    const listaAtualizada = ongsSalvas.map((ong) => {
-      if (ong.email === ongLogada.email) {
-        return perfilAtualizado;
-      }
-
-      return ong;
-    });
-
-    localStorage.setItem("ongsCadastradas", JSON.stringify(listaAtualizada));
-    localStorage.setItem("ongLogada", JSON.stringify(perfilAtualizado));
-
-    alert("Perfil atualizado com sucesso!");
-  } catch (erro) {
-    console.error(erro);
-    alert("Não foi possível salvar. Tente usar uma imagem menor.");
-  }
-};
-
-  const desconectar = () => {
-    localStorage.removeItem("ongLogada");
-    navigate("/");
+    leitor.readAsDataURL(arquivo);
   };
 
-  
+  const cancelarEdicao = () => {
+    setPerfil({
+      ...ongLogada,
+      cidade: ongLogada.cidade || ongLogada.localizacao || "",
+      endereco: ongLogada.endereco || "",
+      nichoPrincipal: ongLogada.nichoPrincipal || ongLogada.nicho || "",
+      chavePix: ongLogada.chavePix || "",
+      diasFuncionamento: ongLogada.diasFuncionamento || "",
+      horarioFuncionamento: ongLogada.horarioFuncionamento || "",
+      sobre: ongLogada.sobre || "",
+      imagem: ongLogada.imagem || "",
+    });
+
+    setEditando(false);
+  };
+
+  const salvarAlteracoes = () => {
+    try {
+      const nome = perfil.nome.trim();
+      const cnpj = perfil.cnpj.trim();
+      const cidade = perfil.cidade.trim();
+      const endereco = perfil.endereco.trim();
+      const nichoPrincipal = perfil.nichoPrincipal.trim();
+      const chavePix = perfil.chavePix.trim();
+      const diasFuncionamento = perfil.diasFuncionamento.trim();
+      const horarioFuncionamento = perfil.horarioFuncionamento.trim();
+      const sobre = perfil.sobre.trim();
+
+      if (cnpj.length !== 14) {
+        alert("O CNPJ precisa ter exatamente 14 números.");
+        return;
+      }
+
+      if (
+        nome === "" ||
+        cidade === "" ||
+        endereco === "" ||
+        nichoPrincipal === "" ||
+        chavePix === "" ||
+        diasFuncionamento === "" ||
+        horarioFuncionamento === "" ||
+        sobre === ""
+      ) {
+        alert("Preencha todos os campos obrigatórios antes de salvar.");
+        return;
+      }
+
+      const ongsSalvas =
+        JSON.parse(localStorage.getItem("ongsCadastradas")) || [];
+
+      const perfilAtualizado = {
+        ...perfil,
+
+        nome,
+        cnpj,
+        cidade,
+        endereco,
+        nichoPrincipal,
+        chavePix,
+        diasFuncionamento,
+        horarioFuncionamento,
+        sobre,
+
+        localizacao: cidade,
+        nicho: nichoPrincipal,
+
+        email: ongLogada.email,
+        senha: ongLogada.senha,
+      };
+
+      const listaAtualizada = ongsSalvas.map((ong) => {
+        if (ong.email === ongLogada.email) {
+          return perfilAtualizado;
+        }
+
+        return ong;
+      });
+
+      localStorage.setItem("ongsCadastradas", JSON.stringify(listaAtualizada));
+      localStorage.setItem("ongLogada", JSON.stringify(perfilAtualizado));
+
+      const necessidadesSalvas =
+        JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
+
+      const necessidadesAtualizadas = necessidadesSalvas.map((publicacao) => {
+        if (publicacao.ong.email === ongLogada.email) {
+          return {
+            ...publicacao,
+            ong: {
+              ...publicacao.ong,
+              nome: perfilAtualizado.nome,
+              cnpj: perfilAtualizado.cnpj,
+              cidade: perfilAtualizado.cidade,
+              localizacao: perfilAtualizado.cidade,
+              endereco: perfilAtualizado.endereco,
+              nichoPrincipal: perfilAtualizado.nichoPrincipal,
+              nicho: perfilAtualizado.nichoPrincipal,
+              chavePix: perfilAtualizado.chavePix,
+              diasFuncionamento: perfilAtualizado.diasFuncionamento,
+              horarioFuncionamento: perfilAtualizado.horarioFuncionamento,
+              imagem: perfilAtualizado.imagem,
+              sobre: perfilAtualizado.sobre,
+            },
+          };
+        }
+
+        return publicacao;
+      });
+
+      localStorage.setItem(
+        "necessidadesPublicadas",
+        JSON.stringify(necessidadesAtualizadas)
+      );
+
+      alert("Perfil atualizado com sucesso!");
+      setEditando(false);
+    } catch (erro) {
+      console.error(erro);
+      alert("Não foi possível salvar. Tente usar uma imagem menor.");
+    }
+  };
+
+  const inicialPerfil = perfil.nome
+    ? perfil.nome.charAt(0).toUpperCase()
+    : "O";
 
   return (
     <div className="profile-page">
@@ -121,28 +227,28 @@ function ONGProfile() {
         <div className="ong-logo">+COM</div>
 
         <div className="ong-nav-links">
-        <Link to="/home">Home</Link>
+          <button type="button" onClick={() => navigate("/home")}>
+            Início
+          </button>
 
-        <button onClick={() => setMostrarNormas(true)}>
-         Normas do site
-        </button>
+          <button type="button" onClick={() => setMostrarNormas(true)}>
+            Normas do site
+          </button>
 
-        <button onClick={irParaSuporte}>
-        Suporte
-        </button>
+          <button type="button" onClick={() => setMostrarSuporte(true)}>
+            Suporte
+          </button>
         </div>
 
-        <div className="ong-profile-circle">
-         {perfil.imagem ? (
-         <img src={perfil.imagem} alt="Foto da ONG" />
-          ) : (
-          perfil.nome.charAt(0).toUpperCase()
-          )}
-        </div>
+        <ProfileMenu tipo="ong" pessoa={perfil} />
       </nav>
 
       <div className="profile-container">
-        <button className="profile-close" onClick={() => navigate("/home")}>
+        <button
+          type="button"
+          className="profile-close"
+          onClick={() => navigate("/home")}
+        >
           ×
         </button>
 
@@ -151,19 +257,19 @@ function ONGProfile() {
             {perfil.imagem ? (
               <img src={perfil.imagem} alt="Imagem da ONG" />
             ) : (
-              <div className="profile-image-placeholder">
-                {perfil.nome.charAt(0).toUpperCase()}
-              </div>
+              <div className="profile-image-placeholder">{inicialPerfil}</div>
             )}
 
-            <label className="profile-image-button">
-              Alterar imagem
-              <input
-                type="file"
-                accept="image/*"
-                onChange={carregarImagem}
-              />
-            </label>
+            {editando && (
+              <label className="profile-image-button">
+                Alterar imagem
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={carregarImagem}
+                />
+              </label>
+            )}
           </div>
 
           <div className="profile-title-area">
@@ -174,6 +280,7 @@ function ONGProfile() {
               value={perfil.sobre}
               onChange={mudarCampo}
               placeholder="Escreva aqui uma descrição sobre sua ONG..."
+              readOnly={!editando}
             ></textarea>
           </div>
         </div>
@@ -186,6 +293,7 @@ function ONGProfile() {
               name="nome"
               value={perfil.nome}
               onChange={mudarCampo}
+              readOnly={!editando}
             />
           </div>
 
@@ -195,99 +303,165 @@ function ONGProfile() {
               type="text"
               name="cnpj"
               value={perfil.cnpj}
-              onChange={mudarCampo}
+              onChange={mudarCNPJ}
+              maxLength="14"
+              readOnly={!editando}
             />
           </div>
 
           <div className="profile-input-group">
-            <label>Localização</label>
+            <label>Cidade</label>
             <input
               type="text"
-              name="localizacao"
-              value={perfil.localizacao}
+              name="cidade"
+              value={perfil.cidade}
               onChange={mudarCampo}
+              readOnly={!editando}
             />
           </div>
 
           <div className="profile-input-group">
-            <label>Nicho</label>
+            <label>Endereço</label>
             <input
               type="text"
-              name="nicho"
-              value={perfil.nicho}
+              name="endereco"
+              value={perfil.endereco}
               onChange={mudarCampo}
+              readOnly={!editando}
+            />
+          </div>
+
+          <div className="profile-input-group">
+            <label>Nicho principal</label>
+            <input
+              type="text"
+              name="nichoPrincipal"
+              value={perfil.nichoPrincipal}
+              onChange={mudarCampo}
+              readOnly={!editando}
+            />
+          </div>
+
+          <div className="profile-input-group">
+            <label>Chave Pix</label>
+            <input
+              type="text"
+              name="chavePix"
+              value={perfil.chavePix}
+              onChange={mudarCampo}
+              readOnly={!editando}
+            />
+          </div>
+
+          <div className="profile-input-group">
+            <label>Dias de funcionamento</label>
+            <input
+              type="text"
+              name="diasFuncionamento"
+              value={perfil.diasFuncionamento}
+              onChange={mudarCampo}
+              placeholder="Ex: Segunda a sexta"
+              readOnly={!editando}
+            />
+          </div>
+
+          <div className="profile-input-group">
+            <label>Horário de funcionamento</label>
+            <input
+              type="text"
+              name="horarioFuncionamento"
+              value={perfil.horarioFuncionamento}
+              onChange={mudarCampo}
+              placeholder="Ex: 08:00 às 17:00"
+              readOnly={!editando}
             />
           </div>
 
           <div className="profile-input-group full">
             <label>E-mail</label>
-            <input
-              type="email"
-              name="email"
-              value={perfil.email}
-              onChange={mudarCampo}
-            />
+            <input type="email" name="email" value={perfil.email} readOnly />
           </div>
         </div>
 
         <div className="profile-actions">
-          <button className="profile-save-button" onClick={salvarAlteracoes}>
-            Salvar alterações
-          </button>
+          {!editando ? (
+            <button
+              type="button"
+              className="profile-save-button"
+              onClick={() => setEditando(true)}
+            >
+              Editar perfil
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="profile-save-button"
+                onClick={salvarAlteracoes}
+              >
+                Salvar alterações
+              </button>
 
-          <button
-            className="profile-disconnect-button"
-            onClick={() => setMostrarConfirmacao(true)}
-          >
-            Desconectar
-          </button>
+              <button
+                type="button"
+                className="profile-disconnect-button"
+                onClick={cancelarEdicao}
+              >
+                Cancelar
+              </button>
+            </>
+          )}
         </div>
       </div>
 
-      {mostrarConfirmacao && (
+      {mostrarNormas && (
         <div className="modal-background">
           <div className="modal-box">
-            <h2>Desconectar</h2>
+            <h2>Normas do site</h2>
 
-            <p>Tem certeza que deseja se desconectar da conta?</p>
+            <p>• Publique apenas necessidades reais da sua instituição.</p>
 
-            <div className="disconnect-modal-buttons">
-              <button onClick={desconectar}>
-                Sim, desconectar
-              </button>
+            <p>
+              • Mantenha os pedidos atualizados conforme forem recebendo
+              doações.
+            </p>
 
-              <button onClick={() => setMostrarConfirmacao(false)}>
-                Cancelar
-              </button>
-            </div>
+            <p>• Não utilize informações falsas ou enganosas.</p>
+
+            <p>• Remova pedidos que já foram atendidos.</p>
+
+            <button type="button" onClick={() => setMostrarNormas(false)}>
+              Fechar
+            </button>
           </div>
         </div>
-
-        
       )}
-      {mostrarNormas && (
-  <div className="modal-background">
-    <div className="modal-box">
-      <h2>Normas do site</h2>
 
-      <p>• Publique apenas necessidades reais da sua instituição.</p>
+      {mostrarSuporte && (
+        <div className="modal-background">
+          <div className="modal-box">
+            <h2>Suporte</h2>
 
-      <p>
-        • Mantenha os pedidos atualizados conforme forem recebendo doações.
-      </p>
+            <p>
+              Caso tenha algum problema com nossa plataforma, entre em contato
+              conosco:
+            </p>
 
-      <p>• Não utilize informações falsas ou enganosas.</p>
+            <p>
+              <strong>EMAIL:</strong> maiscom@gmail.com
+            </p>
 
-      <p>• Remova pedidos que já foram atendidos.</p>
+            <p>
+              <strong>Número:</strong> 4002-8922
+            </p>
 
-      <button onClick={() => setMostrarNormas(false)}>
-        Fechar
-      </button>
+            <button type="button" onClick={() => setMostrarSuporte(false)}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-)}
-    </div>
-    
   );
 }
 

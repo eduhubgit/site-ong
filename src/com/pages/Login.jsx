@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../styles/login.css";
 import loginImage from "../assets/login-image.png";
@@ -10,6 +10,7 @@ function Login() {
   const [tipoLogin, setTipoLogin] = useState("ong");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const fazerLogin = () => {
     if (tipoLogin === "ong") {
@@ -18,8 +19,7 @@ function Login() {
 
       const ongEncontrada = ongsSalvas.find(
         (ong) =>
-          ong.email === email.trim().toLowerCase() &&
-          ong.senha === senha
+          ong.email === email.trim().toLowerCase() && ong.senha === senha
       );
 
       if (ongEncontrada) {
@@ -71,27 +71,29 @@ function Login() {
   return (
     <div className="login-page">
       <img src={fundoImage} alt="Fundo" className="bg-full-image" />
-      
 
       <div className="login-container">
-        <div className="login-type-card">
-          <label>Entrar como</label>
-
-          <select
-            value={tipoLogin}
-            onChange={(evento) => setTipoLogin(evento.target.value)}
-          >
-            <option value="ong">ONG</option>
-            <option value="usuario">Usuário</option>
-          </select>
-        </div>
-
         <div className="login-content">
           <div className="login-left">
-            <h1>Login</h1>
+            <div className="login-title-row">
+              <h1>Login</h1>
+
+              <div className="login-type-card">
+                <label>Entrar como</label>
+
+                <select
+                  value={tipoLogin}
+                  onChange={(evento) => setTipoLogin(evento.target.value)}
+                >
+                  <option value="ong">ONG</option>
+                  <option value="usuario">Usuário</option>
+                </select>
+              </div>
+            </div>
 
             <div className="input-group">
               <label>E-mail</label>
+
               <input
                 type="email"
                 value={email}
@@ -101,11 +103,22 @@ function Login() {
 
             <div className="input-group">
               <label>Senha</label>
-              <input
-                type="password"
-                value={senha}
-                onChange={(evento) => setSenha(evento.target.value)}
-              />
+
+              <div className="login-password-area">
+                <input
+                  type={mostrarSenha ? "text" : "password"}
+                  value={senha}
+                  onChange={(evento) => setSenha(evento.target.value)}
+                />
+
+                <button
+                  type="button"
+                  className="login-eye-button"
+                  onClick={() => setMostrarSenha(!mostrarSenha)}
+                >
+                  {mostrarSenha ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
 
             <div className="login-options">

@@ -1,11 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
-import "../styles/registerUser.css";
+import { useState, useRef } from "react";
+import "../styles/registerONG.css";
 import loginImage from "../assets/login-image.png";
+import fundoImage from "../../assets/fundo.png";
 
 function RegisterUser() {
   const navigate = useNavigate();
   const imagemInputRef = useRef(null);
+
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const [usuario, setUsuario] = useState({
     nome: "",
@@ -100,18 +103,29 @@ function RegisterUser() {
   };
 
   return (
-    <div className="user-register-page">
-      <div className="user-shape-orange user-top-left-orange"></div>
-      <div className="user-shape-blue user-top-right-blue"></div>
-      <div className="user-shape-blue user-bottom-left-blue"></div>
-      <div className="user-shape-orange user-bottom-right-orange"></div>
+    <div className="register-page">
+      <img src={fundoImage} alt="Fundo" className="bg-full-image" />
 
-      <div className="user-register-container">
-        <div className="user-register-content">
-          <form className="user-register-left" onSubmit={cadastrarUsuario}>
+      <div className="register-container">
+        <div className="register-top">
+          <label>Entrar como</label>
+
+          <select
+            value="usuario"
+            onChange={(evento) =>
+              evento.target.value === "ong" && navigate("/register")
+            }
+          >
+            <option value="ong">ONG</option>
+            <option value="usuario">Usuário</option>
+          </select>
+        </div>
+
+        <div className="register-content">
+          <form className="register-left" onSubmit={cadastrarUsuario}>
             <h1>Cadastrar Usuário</h1>
 
-            <div className="user-input-group">
+            <div className="input-group-register">
               <label>Nome</label>
               <input
                 type="text"
@@ -122,7 +136,7 @@ function RegisterUser() {
               />
             </div>
 
-            <div className="user-input-group">
+            <div className="input-group-register">
               <label>E-mail</label>
               <input
                 type="email"
@@ -133,49 +147,62 @@ function RegisterUser() {
               />
             </div>
 
-            <div className="user-input-group">
+            <div className="input-group-register">
               <label>Localização</label>
               <input
                 type="text"
                 name="localizacao"
                 value={usuario.localizacao}
                 onChange={mudarCampo}
+                placeholder="Ex: Quixadá - CE"
                 required
               />
             </div>
 
-            <div className="user-input-group">
+            <div className="input-group-register">
               <label>Senha</label>
-              <input
-                type="password"
-                name="senha"
-                value={usuario.senha}
-                onChange={mudarCampo}
-                required
-              />
+
+              <div className="password-input-area">
+                <input
+                  type={mostrarSenha ? "text" : "password"}
+                  name="senha"
+                  value={usuario.senha}
+                  onChange={mudarCampo}
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="password-eye-button"
+                  onClick={() => setMostrarSenha(!mostrarSenha)}
+                >
+                  {mostrarSenha ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
 
-            <div className="user-input-group">
-              <label>Imagem de perfil</label>
+            <div className="input-group-register">
+              <label>Imagem do usuário</label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={carregarImagem}
                 ref={imagemInputRef}
+                className="file-input"
               />
             </div>
 
             {usuario.imagem && (
-              <div className="user-image-area">
+              <div className="register-image-area">
                 <img
-                  className="user-image-preview"
+                  className="register-image-preview"
                   src={usuario.imagem}
                   alt="Prévia do usuário"
                 />
 
                 <button
                   type="button"
-                  className="user-remove-image-button"
+                  className="remove-image-button"
                   onClick={removerImagem}
                 >
                   Remover imagem
@@ -183,24 +210,27 @@ function RegisterUser() {
               </div>
             )}
 
-            <div className="user-input-group">
+            <div className="input-group-register">
               <label>Sobre você</label>
               <textarea
                 name="sobre"
                 value={usuario.sobre}
                 onChange={mudarCampo}
-                placeholder="Escreva um pouco sobre você..."
+                placeholder="Escreva um pequeno texto sobre você..."
+                required
               ></textarea>
             </div>
 
-            <button type="submit">Criar usuário</button>
+            <button type="submit" className="btn-criar-ong">
+              Criar conta
+            </button>
 
-            <p className="user-login-link">
+            <p className="login-link">
               Já tem uma conta? <Link to="/">Entrar</Link>
             </p>
           </form>
 
-          <div className="user-register-right">
+          <div className="register-right">
             <img src={loginImage} alt="Ilustração de cadastro" />
           </div>
         </div>

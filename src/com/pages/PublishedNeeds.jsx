@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
 import "../styles/publishedNeeds.css";
 
@@ -7,8 +8,6 @@ function PublishedNeeds() {
   const navigate = useNavigate();
 
   const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
-  const nomeOng = ongLogada?.nome || "ONG";
-  const inicialPerfil = nomeOng.charAt(0).toUpperCase();
 
   const todasNecessidades =
     JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
@@ -17,25 +16,54 @@ function PublishedNeeds() {
     (publicacao) => publicacao.ong.email === ongLogada?.email
   );
 
+  const categoriasDisponiveis = [
+    "Alimentos",
+    "Produtos de limpeza",
+    "Roupas",
+    "Brinquedos",
+    "Higiene pessoal",
+    "Material escolar",
+    "Medicamentos",
+    "Móveis e utensílios",
+    "Ração animal",
+    "Outros",
+  ];
+
   const [necessidades, setNecessidades] = useState(necessidadesDaOng);
 
   const [doacoes, setDoacoes] = useState(
     JSON.parse(localStorage.getItem("doacoesRecebidas")) || []
   );
 
+  const [contribuicoesMonetarias, setContribuicoesMonetarias] = useState(
+    JSON.parse(localStorage.getItem("contribuicoesMonetarias")) || []
+  );
+
   const [mostrarNormas, setMostrarNormas] = useState(false);
+  const [mostrarSuporte, setMostrarSuporte] = useState(false);
   const [mostrarDoacoes, setMostrarDoacoes] = useState(false);
+  const [mostrarContribuicoes, setMostrarContribuicoes] = useState(false);
   const [mostrarAcaoAposDoacao, setMostrarAcaoAposDoacao] = useState(false);
   const [mostrarEditarNecessidade, setMostrarEditarNecessidade] =
     useState(false);
+  const [mostrarConfirmarSuprida, setMostrarConfirmarSuprida] = useState(false);
 
   const [publicacaoSelecionada, setPublicacaoSelecionada] = useState(null);
   const [doacaoSelecionada, setDoacaoSelecionada] = useState(null);
+  const [contribuicaoSelecionada, setContribuicaoSelecionada] = useState(null);
+  const [tipoRegistroSelecionado, setTipoRegistroSelecionado] = useState("");
+
   const [itensEditados, setItensEditados] = useState([]);
+  const [categoriasEditadas, setCategoriasEditadas] = useState([]);
 
   const salvarDoacoes = (novaLista) => {
     localStorage.setItem("doacoesRecebidas", JSON.stringify(novaLista));
     setDoacoes(novaLista);
+  };
+
+  const salvarContribuicoes = (novaLista) => {
+    localStorage.setItem("contribuicoesMonetarias", JSON.stringify(novaLista));
+    setContribuicoesMonetarias(novaLista);
   };
 
   const salvarNecessidades = (novaListaGeral) => {
@@ -56,49 +84,74 @@ function PublishedNeeds() {
     setMostrarDoacoes(true);
   };
 
-  const adicionarDoacaoTeste = (publicacao) => {
-    const primeiroItem = publicacao.itens[0];
-
-    const novaDoacao = {
-      id: Date.now(),
-      publicacaoId: publicacao.id,
-      nomeDoador: "Doador teste",
-      contato: "usuario@teste.com",
-      mensagem: primeiroItem
-        ? `Olá, posso doar ${primeiroItem.quantidade} de ${primeiroItem.nome}.`
-        : "Olá, gostaria de ajudar com esta necessidade.",
-      status: "Pendente",
-      dataEnvio: new Date().toLocaleString("pt-BR"),
-    };
-
-    const listaAtualizada = [...doacoes, novaDoacao];
-
-    salvarDoacoes(listaAtualizada);
-
-    alert("Doação teste adicionada.");
+  const abrirContribuicoes = (publicacao) => {
+    setPublicacaoSelecionada(publicacao);
+    setMostrarContribuicoes(true);
   };
 
   const concluirDoacao = (doacao) => {
     setDoacaoSelecionada(doacao);
+    setContribuicaoSelecionada(null);
+    setTipoRegistroSelecionado("doacao");
+
     setMostrarDoacoes(false);
     setMostrarAcaoAposDoacao(true);
   };
 
-  const removerDoacaoConcluida = () => {
-    const listaAtualizada = doacoes.filter(
-      (doacao) => doacao.id !== doacaoSelecionada.id
-    );
+  const concluirContribuicao = (contribuicao) => {
+    setContribuicaoSelecionada(contribuicao);
+    setDoacaoSelecionada(null);
+    setTipoRegistroSelecionado("contribuicao");
 
-    salvarDoacoes(listaAtualizada);
+    setMostrarContribuicoes(false);
+    setMostrarAcaoAposDoacao(true);
+  };
+
+  const removerRegistroConcluido = () => {
+    if (tipoRegistroSelecionado === "doacao" && doacaoSelecionada) {
+      const listaAtualizada = doacoes.filter(
+        (doacao) => doacao.id !== doacaoSelecionada.id
+      );
+
+      salvarDoacoes(listaAtualizada);
+    }
+
+    if (tipoRegistroSelecionado === "contribuicao" && contribuicaoSelecionada) {
+      const listaAtualizada = contribuicoesMonetarias.filter(
+        (contribuicao) => contribuicao.id !== contribuicaoSelecionada.id
+      );
+
+      salvarContribuicoes(listaAtualizada);
+    }
   };
 
   const prepararEdicaoNecessidade = () => {
-    removerDoacaoConcluida();
-
     setItensEditados(publicacaoSelecionada.itens);
+    setCategoriasEditadas(publicacaoSelecionada.categorias || []);
 
     setMostrarAcaoAposDoacao(false);
     setMostrarEditarNecessidade(true);
+  };
+
+  const cancelarEdicaoNecessidade = () => {
+    setMostrarEditarNecessidade(false);
+    setItensEditados([]);
+    setCategoriasEditadas([]);
+
+    setPublicacaoSelecionada(null);
+    setDoacaoSelecionada(null);
+    setContribuicaoSelecionada(null);
+    setTipoRegistroSelecionado("");
+  };
+
+  const alterarCategoriaEditada = (categoria) => {
+    if (categoriasEditadas.includes(categoria)) {
+      setCategoriasEditadas(
+        categoriasEditadas.filter((item) => item !== categoria)
+      );
+    } else {
+      setCategoriasEditadas([...categoriasEditadas, categoria]);
+    }
   };
 
   const alterarItemEditado = (id, campo, valor) => {
@@ -122,6 +175,11 @@ function PublishedNeeds() {
   };
 
   const salvarEdicaoNecessidade = () => {
+    if (categoriasEditadas.length === 0) {
+      alert("A necessidade precisa ter pelo menos uma categoria.");
+      return;
+    }
+
     if (itensEditados.length === 0) {
       alert("A necessidade precisa ter pelo menos um item.");
       return;
@@ -143,6 +201,7 @@ function PublishedNeeds() {
       if (publicacao.id === publicacaoSelecionada.id) {
         return {
           ...publicacao,
+          categorias: categoriasEditadas,
           itens: itensEditados,
           status: "Atualizado",
           dataAtualizacao: new Date().toLocaleString("pt-BR"),
@@ -153,17 +212,24 @@ function PublishedNeeds() {
     });
 
     salvarNecessidades(listaAtualizada);
+    removerRegistroConcluido();
 
     alert("Necessidade atualizada com sucesso!");
 
     setMostrarEditarNecessidade(false);
     setPublicacaoSelecionada(null);
     setDoacaoSelecionada(null);
+    setContribuicaoSelecionada(null);
+    setTipoRegistroSelecionado("");
+    setItensEditados([]);
+    setCategoriasEditadas([]);
+  };
+
+  const abrirConfirmacaoNecessidadeSuprida = () => {
+    setMostrarConfirmarSuprida(true);
   };
 
   const marcarNecessidadeSuprida = () => {
-    removerDoacaoConcluida();
-
     const necessidadesAtuais =
       JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
 
@@ -171,13 +237,33 @@ function PublishedNeeds() {
       (publicacao) => publicacao.id !== publicacaoSelecionada.id
     );
 
+    const doacoesAtualizadas = doacoes.filter(
+      (doacao) => doacao.publicacaoId !== publicacaoSelecionada.id
+    );
+
+    const contribuicoesAtualizadas = contribuicoesMonetarias.filter(
+      (contribuicao) => contribuicao.publicacaoId !== publicacaoSelecionada.id
+    );
+
     salvarNecessidades(listaAtualizada);
+    salvarDoacoes(doacoesAtualizadas);
+    salvarContribuicoes(contribuicoesAtualizadas);
 
     alert("Necessidade marcada como suprida e removida da lista.");
 
+    setMostrarConfirmarSuprida(false);
     setMostrarAcaoAposDoacao(false);
     setPublicacaoSelecionada(null);
     setDoacaoSelecionada(null);
+    setContribuicaoSelecionada(null);
+    setTipoRegistroSelecionado("");
+  };
+
+  const cancelarAcaoAposDoacao = () => {
+    setMostrarAcaoAposDoacao(false);
+    setDoacaoSelecionada(null);
+    setContribuicaoSelecionada(null);
+    setTipoRegistroSelecionado("");
   };
 
   const removerPublicacao = (id) => {
@@ -200,13 +286,39 @@ function PublishedNeeds() {
       (doacao) => doacao.publicacaoId !== id
     );
 
+    const contribuicoesAtualizadas = contribuicoesMonetarias.filter(
+      (contribuicao) => contribuicao.publicacaoId !== id
+    );
+
     salvarNecessidades(listaAtualizada);
     salvarDoacoes(doacoesAtualizadas);
+    salvarContribuicoes(contribuicoesAtualizadas);
+  };
+
+  const formatarDataEntrega = (data) => {
+    if (!data) {
+      return "Data não informada";
+    }
+
+    const partes = data.split("-");
+
+    if (partes.length !== 3) {
+      return data;
+    }
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
   };
 
   const doacoesDaPublicacaoSelecionada = publicacaoSelecionada
     ? doacoes.filter(
         (doacao) => doacao.publicacaoId === publicacaoSelecionada.id
+      )
+    : [];
+
+  const contribuicoesDaPublicacaoSelecionada = publicacaoSelecionada
+    ? contribuicoesMonetarias.filter(
+        (contribuicao) =>
+          contribuicao.publicacaoId === publicacaoSelecionada.id
       )
     : [];
 
@@ -216,32 +328,30 @@ function PublishedNeeds() {
         <div className="ong-logo">+COM</div>
 
         <div className="ong-nav-links">
-          <button onClick={() => navigate("/home")}>Home</button>
+          <button type="button" onClick={() => navigate("/home")}>
+            Início
+          </button>
 
-          <button onClick={() => setMostrarNormas(true)}>
+          <button type="button" onClick={() => setMostrarNormas(true)}>
             Normas do site
           </button>
 
-          <button onClick={() => navigate("/home")}>Suporte</button>
+          <button type="button" onClick={() => setMostrarSuporte(true)}>
+            Suporte
+          </button>
         </div>
 
-        <button
-          className="ong-profile-circle"
-          onClick={() => navigate("/perfil-ong")}
-        >
-          {ongLogada?.imagem ? (
-            <img src={ongLogada.imagem} alt="Foto da ONG" />
-          ) : (
-            inicialPerfil
-          )}
-        </button>
+        <ProfileMenu tipo="ong" pessoa={ongLogada} />
       </nav>
 
       <main className="published-main">
         <div className="published-header">
           <h1>Necessidades publicadas</h1>
 
-          <button onClick={() => navigate("/publicar-necessidades")}>
+          <button
+            type="button"
+            onClick={() => navigate("/publicar-necessidades")}
+          >
             Nova publicação
           </button>
         </div>
@@ -260,6 +370,10 @@ function PublishedNeeds() {
             {necessidades.map((publicacao) => {
               const quantidadeDoacoes = doacoes.filter(
                 (doacao) => doacao.publicacaoId === publicacao.id
+              ).length;
+
+              const quantidadeContribuicoes = contribuicoesMonetarias.filter(
+                (contribuicao) => contribuicao.publicacaoId === publicacao.id
               ).length;
 
               return (
@@ -290,6 +404,7 @@ function PublishedNeeds() {
 
                   <div className="published-card-actions">
                     <button
+                      type="button"
                       className="donations-button"
                       onClick={() => abrirDoacoes(publicacao)}
                     >
@@ -297,13 +412,16 @@ function PublishedNeeds() {
                     </button>
 
                     <button
-                      className="fake-donation-button"
-                      onClick={() => adicionarDoacaoTeste(publicacao)}
+                      type="button"
+                      className="monetary-contributions-button"
+                      onClick={() => abrirContribuicoes(publicacao)}
                     >
-                      Adicionar doação teste
+                      Contribuições monetárias enviadas (
+                      {quantidadeContribuicoes})
                     </button>
 
                     <button
+                      type="button"
                       className="remove-publication-button"
                       onClick={() => removerPublicacao(publicacao.id)}
                     >
@@ -334,15 +452,55 @@ function PublishedNeeds() {
               <div className="donations-list">
                 {doacoesDaPublicacaoSelecionada.map((doacao) => (
                   <div className="donation-message-card" key={doacao.id}>
-                    <h3>{doacao.nomeDoador}</h3>
+                    <h3>Mensagem de doação</h3>
 
-                    <p>{doacao.mensagem}</p>
+                    <p>
+                      <strong>Doador:</strong> {doacao.nomeDoador}
+                    </p>
 
-                    <small>
-                      Contato: {doacao.contato} • {doacao.dataEnvio}
-                    </small>
+                    <p>
+                      <strong>E-mail:</strong> {doacao.contato}
+                    </p>
 
-                    <button onClick={() => concluirDoacao(doacao)}>
+                    <div className="received-donation-items">
+                      <strong>Itens que o doador pode doar:</strong>
+
+                      {doacao.itensDoacao && doacao.itensDoacao.length > 0 ? (
+                        doacao.itensDoacao.map((item) => (
+                          <p key={item.id}>
+                            {item.nome}: {item.quantidadeDoada} unidade(s)
+                            <span>
+                              {" "}
+                              | Pedido original: {item.quantidadePedido}
+                            </span>
+                          </p>
+                        ))
+                      ) : (
+                        <p>
+                          {doacao.itemDoado || "Item não informado"} -{" "}
+                          {doacao.quantidadeDoada || "Quantidade não informada"}
+                        </p>
+                      )}
+                    </div>
+
+                    <p>
+                      <strong>Entrega:</strong>{" "}
+                      {formatarDataEntrega(doacao.dataEntrega)} às{" "}
+                      {doacao.horarioEntrega || "horário não informado"}
+                    </p>
+
+                    {doacao.observacoes && (
+                      <p>
+                        <strong>Observações:</strong> {doacao.observacoes}
+                      </p>
+                    )}
+
+                    <small>Mensagem enviada em: {doacao.dataEnvio}</small>
+
+                    <button
+                      type="button"
+                      onClick={() => concluirDoacao(doacao)}
+                    >
                       Concluir doação
                     </button>
                   </div>
@@ -350,7 +508,110 @@ function PublishedNeeds() {
               </div>
             )}
 
-            <button onClick={() => setMostrarDoacoes(false)}>Fechar</button>
+            <button type="button" onClick={() => setMostrarDoacoes(false)}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {mostrarContribuicoes && publicacaoSelecionada && (
+        <div className="modal-background">
+          <div className="modal-box donations-modal">
+            <h2>Contribuições monetárias enviadas</h2>
+
+            <p>
+              Publicação: <strong>{publicacaoSelecionada.ong.nome}</strong>
+            </p>
+
+            <div className="monetary-warning-box">
+              <strong>Aviso para a ONG:</strong>
+
+              <p>
+                Se a ONG receber uma doação em dinheiro referente a esta
+                necessidade, o valor deve ser usado para suprir os pedidos
+                publicados. Depois, verifique se a necessidade foi totalmente
+                atendida ou se precisa ser atualizada, evitando pedidos
+                repetidos e doações desnecessárias.
+              </p>
+            </div>
+
+            {contribuicoesDaPublicacaoSelecionada.length === 0 ? (
+              <p className="no-donations-message">
+                Ainda não existem contribuições monetárias enviadas para esta
+                necessidade.
+              </p>
+            ) : (
+              <div className="donations-list">
+                {contribuicoesDaPublicacaoSelecionada.map((contribuicao) => (
+                  <div className="donation-message-card" key={contribuicao.id}>
+                    <h3>Contribuição monetária</h3>
+
+                    <p>
+                      <strong>Doador:</strong> {contribuicao.nomeDoador}
+                    </p>
+
+                    <p>
+                      <strong>E-mail:</strong> {contribuicao.contato}
+                    </p>
+
+                    <p>
+                      <strong>Enviado em:</strong> {contribuicao.dataEnvio}
+                    </p>
+
+                    {contribuicao.mensagem && (
+                      <p>
+                        <strong>Mensagem:</strong> {contribuicao.mensagem}
+                      </p>
+                    )}
+
+                    <div className="proof-view-box">
+                      <strong>Comprovante enviado:</strong>
+
+                      {contribuicao.comprovanteArquivo ? (
+                        contribuicao.comprovanteTipo?.startsWith("image/") ? (
+                          <img
+                            src={contribuicao.comprovanteArquivo}
+                            alt="Comprovante da contribuição"
+                            className="proof-preview-image"
+                          />
+                        ) : (
+                          <a
+                            href={contribuicao.comprovanteArquivo}
+                            download={
+                              contribuicao.comprovanteNome || "comprovante"
+                            }
+                            className="proof-download-link"
+                          >
+                            Baixar comprovante
+                          </a>
+                        )
+                      ) : (
+                        <p>Comprovante não informado.</p>
+                      )}
+
+                      {contribuicao.comprovanteNome && (
+                        <span>{contribuicao.comprovanteNome}</span>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => concluirContribuicao(contribuicao)}
+                    >
+                      Concluir doação
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setMostrarContribuicoes(false)}
+            >
+              Fechar
+            </button>
           </div>
         </div>
       )}
@@ -358,27 +619,59 @@ function PublishedNeeds() {
       {mostrarAcaoAposDoacao && (
         <div className="modal-background">
           <div className="modal-box">
-            <h2>Doação concluída</h2>
+            <h2>
+              {tipoRegistroSelecionado === "contribuicao"
+                ? "Contribuição monetária concluída"
+                : "Doação concluída"}
+            </h2>
 
             <p>
               Agora atualize a necessidade publicada para manter os pedidos da
               ONG corretos.
             </p>
 
-            <p>
-              Escolha uma das opções abaixo:
-            </p>
+            <p>Escolha uma das opções abaixo:</p>
 
             <div className="after-donation-actions">
-              <button onClick={prepararEdicaoNecessidade}>
+              <button type="button" onClick={prepararEdicaoNecessidade}>
                 Editar necessidade
               </button>
 
-              <button onClick={marcarNecessidadeSuprida}>
+              <button
+                type="button"
+                onClick={abrirConfirmacaoNecessidadeSuprida}
+              >
                 Necessidade suprida
               </button>
 
-              <button onClick={() => setMostrarAcaoAposDoacao(false)}>
+              <button type="button" onClick={cancelarAcaoAposDoacao}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {mostrarConfirmarSuprida && (
+        <div className="modal-background">
+          <div className="modal-box">
+            <h2>Confirmar necessidade suprida</h2>
+
+            <p>
+              Tem certeza que deseja marcar esta necessidade como suprida? Essa
+              ação vai remover a publicação da lista de necessidades e apagar as
+              mensagens/contribuições ligadas a ela.
+            </p>
+
+            <div className="after-donation-actions">
+              <button type="button" onClick={marcarNecessidadeSuprida}>
+                Sim, marcar como suprida
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMostrarConfirmarSuprida(false)}
+              >
                 Cancelar
               </button>
             </div>
@@ -392,8 +685,71 @@ function PublishedNeeds() {
             <h2>Editar necessidade</h2>
 
             <p>
-              Atualize os itens após a doação recebida.
+              Atualize as categorias e os itens após a doação recebida.
             </p>
+
+            {doacaoSelecionada?.itensDoacao &&
+              doacaoSelecionada.itensDoacao.length > 0 && (
+                <div className="received-donation-items">
+                  <strong>Itens informados pelo doador:</strong>
+
+                  {doacaoSelecionada.itensDoacao.map((item) => (
+                    <p key={item.id}>
+                      {item.nome}: {item.quantidadeDoada} unidade(s)
+                    </p>
+                  ))}
+                </div>
+              )}
+
+            {contribuicaoSelecionada && (
+              <div className="received-donation-items">
+                <strong>Contribuição monetária informada:</strong>
+
+                <p>Doador: {contribuicaoSelecionada.nomeDoador}</p>
+
+                <p>E-mail: {contribuicaoSelecionada.contato}</p>
+
+                {contribuicaoSelecionada.mensagem && (
+                  <p>Mensagem: {contribuicaoSelecionada.mensagem}</p>
+                )}
+
+                <p>
+                  Comprovante:{" "}
+                  {contribuicaoSelecionada.comprovanteNome ||
+                    "Arquivo enviado"}
+                </p>
+              </div>
+            )}
+
+            <div className="edit-categories-section">
+              <h3>Categorias da publicação</h3>
+
+              <p>
+                Desmarque as categorias que não fazem mais sentido para esta
+                lista de necessidades.
+              </p>
+
+              <div className="edit-categories-grid">
+                {categoriasDisponiveis.map((categoria) => (
+                  <label
+                    key={categoria}
+                    className={
+                      categoriasEditadas.includes(categoria)
+                        ? "edit-category-option selected"
+                        : "edit-category-option"
+                    }
+                  >
+                    <input
+                      type="checkbox"
+                      checked={categoriasEditadas.includes(categoria)}
+                      onChange={() => alterarCategoriaEditada(categoria)}
+                    />
+
+                    <span>{categoria}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
             <div className="edit-items-list">
               {itensEditados.map((item) => (
@@ -418,7 +774,10 @@ function PublishedNeeds() {
                     }
                   />
 
-                  <button onClick={() => removerItemEditado(item.id)}>
+                  <button
+                    type="button"
+                    onClick={() => removerItemEditado(item.id)}
+                  >
                     Remover
                   </button>
                 </div>
@@ -426,11 +785,11 @@ function PublishedNeeds() {
             </div>
 
             <div className="edit-modal-buttons">
-              <button onClick={salvarEdicaoNecessidade}>
+              <button type="button" onClick={salvarEdicaoNecessidade}>
                 Salvar atualização
               </button>
 
-              <button onClick={() => setMostrarEditarNecessidade(false)}>
+              <button type="button" onClick={cancelarEdicaoNecessidade}>
                 Cancelar
               </button>
             </div>
@@ -454,7 +813,32 @@ function PublishedNeeds() {
 
             <p>• Remova pedidos que já foram atendidos.</p>
 
-            <button onClick={() => setMostrarNormas(false)}>
+            <button type="button" onClick={() => setMostrarNormas(false)}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {mostrarSuporte && (
+        <div className="modal-background">
+          <div className="modal-box">
+            <h2>Suporte</h2>
+
+            <p>
+              Caso tenha algum problema com nossa plataforma, entre em contato
+              conosco:
+            </p>
+
+            <p>
+              <strong>EMAIL:</strong> maiscom@gmail.com
+            </p>
+
+            <p>
+              <strong>Número:</strong> 4002-8922
+            </p>
+
+            <button type="button" onClick={() => setMostrarSuporte(false)}>
               Fechar
             </button>
           </div>

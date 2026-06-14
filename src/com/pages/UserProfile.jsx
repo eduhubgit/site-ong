@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
 
 function UserProfile() {
@@ -7,13 +8,9 @@ function UserProfile() {
 
   const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-  const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
   const [mostrarNormas, setMostrarNormas] = useState(false);
-  const [mostrarHistorico, setMostrarHistorico] = useState(false);
-
-  const contribuicoes = (JSON.parse(localStorage.getItem("contribuicoesMonetarias")) || []).filter(
-    (c) => c.emailDoador === usuarioLogado?.email
-  );
+  const [mostrarSuporte, setMostrarSuporte] = useState(false);
+  const [editando, setEditando] = useState(false);
 
   const [perfil, setPerfil] = useState(
     usuarioLogado || {
@@ -72,13 +69,30 @@ function UserProfile() {
     leitor.readAsDataURL(arquivo);
   };
 
+  const cancelarEdicao = () => {
+    setPerfil(usuarioLogado);
+    setEditando(false);
+  };
+
   const salvarAlteracoes = () => {
     try {
       const usuariosSalvos =
         JSON.parse(localStorage.getItem("usuariosCadastrados")) || [];
 
+      if (
+        perfil.nome.trim() === "" ||
+        perfil.localizacao.trim() === "" ||
+        perfil.sobre.trim() === ""
+      ) {
+        alert("Preencha todos os campos obrigatórios antes de salvar.");
+        return;
+      }
+
       const perfilAtualizado = {
         ...perfil,
+        nome: perfil.nome.trim(),
+        localizacao: perfil.localizacao.trim(),
+        sobre: perfil.sobre.trim(),
         email: usuarioLogado.email,
         senha: usuarioLogado.senha,
       };
@@ -99,16 +113,16 @@ function UserProfile() {
       localStorage.setItem("usuarioLogado", JSON.stringify(perfilAtualizado));
 
       alert("Perfil atualizado com sucesso!");
+      setEditando(false);
     } catch (erro) {
       console.error(erro);
       alert("Não foi possível salvar. Tente usar uma imagem menor.");
     }
   };
 
-  const desconectar = () => {
-    localStorage.removeItem("usuarioLogado");
-    navigate("/");
-  };
+  const inicialPerfil = perfil.nome
+    ? perfil.nome.charAt(0).toUpperCase()
+    : "U";
 
   return (
     <div className="profile-page">
@@ -117,23 +131,19 @@ function UserProfile() {
 
         <div className="ong-nav-links">
           <button type="button" onClick={() => navigate("/usuario-home")}>
-            Home
+            Início
           </button>
 
           <button type="button" onClick={() => setMostrarNormas(true)}>
-            Normas do site
+            Normas do Site
           </button>
 
-          <button type="button">Suporte</button>
+          <button type="button" onClick={() => setMostrarSuporte(true)}>
+            Suporte
+          </button>
         </div>
 
-        <button type="button" className="ong-profile-circle">
-          {perfil.imagem ? (
-            <img src={perfil.imagem} alt="Foto do usuário" />
-          ) : (
-            perfil.nome.charAt(0).toUpperCase()
-          )}
-        </button>
+        <ProfileMenu tipo="usuario" pessoa={perfil} />
       </nav>
 
       <div className="profile-container">
@@ -150,19 +160,19 @@ function UserProfile() {
             {perfil.imagem ? (
               <img src={perfil.imagem} alt="Imagem do usuário" />
             ) : (
-              <div className="profile-image-placeholder">
-                {perfil.nome.charAt(0).toUpperCase()}
-              </div>
+              <div className="profile-image-placeholder">{inicialPerfil}</div>
             )}
 
-            <label className="profile-image-button">
-              Alterar imagem
-              <input
-                type="file"
-                accept="image/*"
-                onChange={carregarImagem}
-              />
-            </label>
+            {editando && (
+              <label className="profile-image-button">
+                Alterar imagem
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={carregarImagem}
+                />
+              </label>
+            )}
           </div>
 
           <div className="profile-title-area">
@@ -173,6 +183,7 @@ function UserProfile() {
               value={perfil.sobre}
               onChange={mudarCampo}
               placeholder="Escreva aqui uma descrição sobre você..."
+              readOnly={!editando}
             ></textarea>
           </div>
         </div>
@@ -185,6 +196,7 @@ function UserProfile() {
               name="nome"
               value={perfil.nome}
               onChange={mudarCampo}
+              readOnly={!editando}
             />
           </div>
 
@@ -195,85 +207,78 @@ function UserProfile() {
               name="localizacao"
               value={perfil.localizacao}
               onChange={mudarCampo}
+              readOnly={!editando}
             />
           </div>
 
           <div className="profile-input-group full">
             <label>E-mail</label>
-            <input
-              type="email"
-              name="email"
-              value={perfil.email}
-              readOnly
-            />
+            <input type="email" name="email" value={perfil.email} readOnly />
           </div>
         </div>
 
         <div className="profile-actions">
-          <button
-            type="button"
-            className="profile-history-button"
-            onClick={() => setMostrarHistorico(true)}
-          >
-            Histórico de doações
-          </button>
-
-          <button
-            type="button"
-            className="profile-save-button"
-            onClick={salvarAlteracoes}
-          >
-            Salvar alterações
-          </button>
-
-          <button
-            type="button"
-            className="profile-disconnect-button"
-            onClick={() => setMostrarConfirmacao(true)}
-          >
-            Desconectar
-          </button>
-        </div>
-      </div>
-
-      {mostrarConfirmacao && (
-        <div className="modal-background">
-          <div className="modal-box">
-            <h2>Desconectar</h2>
-
-            <p>Tem certeza que deseja se desconectar da conta?</p>
-
-            <div className="disconnect-modal-buttons">
-              <button type="button" onClick={desconectar}>
-                Sim, desconectar
+          {!editando ? (
+            <button
+              type="button"
+              className="profile-save-button"
+              onClick={() => setEditando(true)}
+            >
+              Editar perfil
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="profile-save-button"
+                onClick={salvarAlteracoes}
+              >
+                Salvar alterações
               </button>
 
               <button
                 type="button"
-                onClick={() => setMostrarConfirmacao(false)}
+                className="profile-disconnect-button"
+                onClick={cancelarEdicao}
               >
                 Cancelar
               </button>
-            </div>
-          </div>
+            </>
+          )}
         </div>
-      )}
+      </div>
 
       {mostrarNormas && (
         <div className="modal-background">
           <div className="modal-box">
-            <h2>Normas do site</h2>
-
-            <p>• Respeite as ONGs e envie apenas mensagens de doação reais.</p>
+            <h2>Normas do Site para Doadores</h2>
 
             <p>
-              • Informe corretamente o que você pretende doar e combine a entrega
-              com responsabilidade.
+              • Cumpra com sua palavra sobre os itens que você informou que iria
+              doar.
             </p>
 
-            <p>• Não envie informações falsas ou enganosas.</p>
+            <p>
+              • Evite enviar mensagens de doação caso você não tenha certeza de
+              que conseguirá realizar a entrega.
+            </p>
 
-            <p>• Use a plataforma apenas para fins solidários.</p>
+            <p>
+              • Entregue as doações em até 3 dias úteis depois de enviar a
+              mensagem de doação.
+            </p>
+
+            <p>
+              • Caso você deixe de entregar doações em até 3 mensagens
+              diferentes, e passe 2 dias do prazo definido na mensagem, você
+              poderá ser banido da plataforma.
+            </p>
+
+            <p>
+              • Quando entregar a doação para a ONG, relembre a instituição de
+              atualizar a necessidade publicada e confirmar que o pedido foi
+              recebido.
+            </p>
 
             <button type="button" onClick={() => setMostrarNormas(false)}>
               Fechar
@@ -282,53 +287,27 @@ function UserProfile() {
         </div>
       )}
 
-      {mostrarHistorico && (
-        <div className="modal-background" onClick={() => setMostrarHistorico(false)}>
-          <div className="modal-box modal-historico" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="modal-close-btn"
-              onClick={() => setMostrarHistorico(false)}
-            >
-              ×
+      {mostrarSuporte && (
+        <div className="modal-background">
+          <div className="modal-box">
+            <h2>Suporte</h2>
+
+            <p>
+              Caso tenha algum problema com nossa plataforma, entre em contato
+              conosco:
+            </p>
+
+            <p>
+              <strong>EMAIL:</strong> maiscom@gmail.com
+            </p>
+
+            <p>
+              <strong>Número:</strong> 4002-8922
+            </p>
+
+            <button type="button" onClick={() => setMostrarSuporte(false)}>
+              Fechar
             </button>
-
-            <h2>Histórico de doações</h2>
-
-            {contribuicoes.length === 0 ? (
-              <p className="historico-vazio">Você ainda não fez nenhuma contribuição monetária.</p>
-            ) : (
-              <div className="historico-lista">
-                {contribuicoes.map((c) => (
-                  <div className="historico-item" key={c.id}>
-                    <div className="historico-col">
-                      <span className="historico-label">Doação:</span>
-                      <span className="historico-valor">R$ {c.valor},00 — {c.nomeOng}</span>
-                    </div>
-                    <div className="historico-col">
-                      <span className="historico-label">Data de publicação:</span>
-                      <span className="historico-valor">{c.data}</span>
-                    </div>
-                    <div className="historico-col">
-                      <span className="historico-label">Status:</span>
-                      <span className={`historico-status historico-status-${c.status === 'Comprovado' ? 'comprovado' : 'aguardando'}`}>
-                        {c.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="historico-footer">
-              <button
-                type="button"
-                className="btn-voltar-historico"
-                onClick={() => setMostrarHistorico(false)}
-              >
-                Voltar
-              </button>
-            </div>
           </div>
         </div>
       )}
