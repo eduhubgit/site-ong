@@ -107,6 +107,7 @@ function RegisterONG() {
       senha: ong.senha,
       imagem: ong.imagem,
       sobre: ong.sobre.trim(),
+      tipo: "ong"
     };
 
     try {
@@ -129,6 +130,8 @@ function RegisterONG() {
   }
     
   };
+
+
 
 
 
