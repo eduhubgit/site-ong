@@ -18,10 +18,43 @@ app.post("/usuarios", async (req, res) => {
   res.json(novoUsuario);
 });
 
-//criar ong
+//criar ONG
 app.post("/ongs", async (req, res) => {
   const novaOng = await Ong.create(req.body);
   res.json(novaOng);
+});
+
+//login usuario e ONG
+app.post("/login", async (req, res) => {
+  const { email, senha, tipo } = req.body;
+
+  let conta;
+
+  if (tipo === "usuario") {
+    conta = await Usuario.findOne({
+      email: email,
+    });
+  }
+
+  if (tipo === "ong") {
+    conta = await Ong.findOne({
+      email: email,
+    });
+  }
+
+  if (!conta) {
+    return res.status(404).json({
+      mensagem: "Email não encontrado",
+    });
+  }
+
+  if (conta.senha !== senha) {
+    return res.status(400).json({
+      mensagem: "Senha incorreta",
+    });
+  }
+
+  res.json(conta);
 });
 
 //liga o back end

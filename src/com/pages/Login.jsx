@@ -12,51 +12,48 @@ function Login() {
   const [senha, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
-  const fazerLogin = () => {
-    if (tipoLogin === "ong") {
-      const ongsSalvas =
-        JSON.parse(localStorage.getItem("ongsCadastradas")) || [];
+  const fazerLogin = async () => {
+    try {
+      const resposta = await fetch("http://localhost:3001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      const ongEncontrada = ongsSalvas.find(
-        (ong) =>
-          ong.email === email.trim().toLowerCase() && ong.senha === senha
-      );
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          senha: senha,
+          tipo: tipoLogin,
+        }),
+      });
 
-      if (ongEncontrada) {
-        localStorage.setItem("ongLogada", JSON.stringify(ongEncontrada));
-        localStorage.removeItem("usuarioLogado");
+      const dados = await resposta.json();
 
-        alert("Login de ONG realizado com sucesso!");
-        navigate("/home");
-      } else {
-        alert("E-mail ou senha de ONG incorretos.");
+      if (!resposta.ok) {
+        alert(dados.mensagem);
+        return;
       }
 
-      return;
-    }
+      if (tipoLogin === "usuario") {
+        localStorage.setItem("usuarioLogado", JSON.stringify(dados));
 
-    if (tipoLogin === "usuario") {
-      const usuariosSalvos =
-        JSON.parse(localStorage.getItem("usuariosCadastrados")) || [];
-
-      const usuarioEncontrado = usuariosSalvos.find(
-        (usuario) =>
-          usuario.email === email.trim().toLowerCase() &&
-          usuario.senha === senha
-      );
-
-      if (usuarioEncontrado) {
-        localStorage.setItem(
-          "usuarioLogado",
-          JSON.stringify(usuarioEncontrado)
-        );
         localStorage.removeItem("ongLogada");
 
-        alert("Login de usuário realizado com sucesso!");
         navigate("/usuario-home");
-      } else {
-        alert("E-mail ou senha de usuário incorretos.");
       }
+
+      if (tipoLogin === "ong") {
+        localStorage.setItem("ongLogada", JSON.stringify(dados));
+
+        localStorage.removeItem("usuarioLogado");
+
+        navigate("/ong-home");
+      }
+
+      alert("Login realizado com sucesso");
+    } catch (erro) {
+      console.log(erro);
+      alert("Erro ao fazer login");
     }
   };
 
