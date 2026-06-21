@@ -11,18 +11,19 @@ function RegisterONG() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const [ong, setOng] = useState({
-    nome: "",
-    cnpj: "",
-    email: "",
-    cidade: "",
-    endereco: "",
-    nichoPrincipal: "",
-    chavePix: "",
-    diasFuncionamento: "",
-    horarioFuncionamento: "",
-    senha: "",
-    imagem: "",
-    sobre: "",
+  nome: "",
+  cnpj: "",
+  email: "",
+  cidade: "",
+  endereco: "",
+  nichoPrincipal: "",
+  chavePix: "",
+  diasFuncionamento: "",
+  horarioFuncionamento: "",
+  senha: "",
+  imagem: "",
+  sobre: "",
+  tipo: "ong",
   });
 
   const mudarCampo = (evento) => {
@@ -78,7 +79,9 @@ function RegisterONG() {
     }
   };
 
-  const cadastrarONG = (evento) => {
+  //cadastrar ONG
+  
+  const cadastrarONG = async (evento) => {
     evento.preventDefault();
 
     if (ong.cnpj.length !== 14) {
@@ -106,28 +109,28 @@ function RegisterONG() {
       sobre: ong.sobre.trim(),
     };
 
-    const ongsSalvas =
-      JSON.parse(localStorage.getItem("ongsCadastradas")) || [];
+    try {
 
-    const emailJaExiste = ongsSalvas.some(
-      (ongSalva) => ongSalva.email === novaONG.email
-    );
+    await fetch("http://localhost:3001/ongs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(novaONG)
 
-    if (emailJaExiste) {
-      alert("Já existe uma ONG cadastrada com esse e-mail.");
-      return;
-    }
+    });
 
-    const listaAtualizada = [...ongsSalvas, novaONG];
+    alert("ONG cadastrada com sucesso");
+    navigate("/ong-home");
 
-    localStorage.setItem("ongsCadastradas", JSON.stringify(listaAtualizada));
-    localStorage.setItem("ongLogada", JSON.stringify(novaONG));
-    localStorage.removeItem("usuarioLogado");
-
-    alert("ONG cadastrada com sucesso!");
-
-    navigate("/home");
+  } catch (erro) {
+    console.log(erro);
+    alert("Erro ao cadastrar ONG");
+  }
+    
   };
+
+
 
   return (
     <div className="register-page">

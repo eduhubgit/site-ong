@@ -21,11 +21,13 @@ function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        
 
         <Route path="/register" element={<RegisterONG />} />
+        
         <Route path="/register-user" element={<RegisterUser />} />
 
-        <Route path="/home" element={<ONGHome />} />
+        <Route path="/ong-home" element={<ONGHome />} />
         <Route path="/usuario-home" element={<UserHome />} />
 
         <Route path="/perfil-ong" element={<ONGProfile />} />

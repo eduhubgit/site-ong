@@ -11,12 +11,13 @@ function RegisterUser() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const [usuario, setUsuario] = useState({
-    nome: "",
-    email: "",
-    localizacao: "",
-    senha: "",
-    imagem: "",
-    sobre: "",
+  nome: "",
+  email: "",
+  localizacao: "",
+  senha: "",
+  imagem: "",
+  bio: "",
+  tipo: "usuario",
   });
 
   const mudarCampo = (evento) => {
@@ -63,44 +64,48 @@ function RegisterUser() {
     }
   };
 
-  const cadastrarUsuario = (evento) => {
-    evento.preventDefault();
 
-    const novoUsuario = {
-      nome: usuario.nome.trim(),
-      email: usuario.email.trim().toLowerCase(),
-      localizacao: usuario.localizacao.trim(),
-      senha: usuario.senha,
-      imagem: usuario.imagem,
-      sobre: usuario.sobre.trim(),
-    };
 
-    const usuariosSalvos =
-      JSON.parse(localStorage.getItem("usuariosCadastrados")) || [];
 
-    const emailJaExiste = usuariosSalvos.some(
-      (usuarioSalvo) => usuarioSalvo.email === novoUsuario.email
-    );
+//cadastrar ususario
 
-    if (emailJaExiste) {
-      alert("Já existe um usuário cadastrado com esse e-mail.");
-      return;
-    }
+const cadastrarUsuario = async (evento) => {
+  evento.preventDefault();
 
-    const listaAtualizada = [...usuariosSalvos, novoUsuario];
-
-    localStorage.setItem(
-      "usuariosCadastrados",
-      JSON.stringify(listaAtualizada)
-    );
-
-    localStorage.setItem("usuarioLogado", JSON.stringify(novoUsuario));
-    localStorage.removeItem("ongLogada");
-
-    alert("Usuário cadastrado com sucesso!");
-
-    navigate("/usuario-home");
+  const novoUsuario = {
+    nome: usuario.nome.trim(),
+    email: usuario.email.trim().toLowerCase(),
+    localizacao: usuario.localizacao.trim(),
+    senha: usuario.senha,
+    imagem: usuario.imagem,
+    bio: usuario.sobre.trim(),
+    tipo: "usuario"
   };
+
+  try {
+
+    await fetch("http://localhost:3001/usuarios", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(novoUsuario)
+
+    });
+
+    alert("Usuário cadastrado com sucesso");
+    navigate("/usuario-home");
+
+  } catch (erro) {
+    console.log(erro);
+    alert("Erro ao cadastrar usuário");
+  }
+
+  };
+
+
+
+  
 
   return (
     <div className="register-page">
@@ -237,6 +242,7 @@ function RegisterUser() {
       </div>
     </div>
   );
+
 }
 
 export default RegisterUser;
