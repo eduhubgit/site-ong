@@ -18,10 +18,58 @@ app.post("/usuarios", async (req, res) => {
   res.json(novoUsuario);
 });
 
+//pegar usuario
+app.get("/usuarios/:id", async (req, res) => {
+  const usuario = await Usuario.findById(req.params.id);
+
+  if (!usuario) {
+    return res.status(404).json({
+      mensagem: "Usuário não encontrado",
+    });
+  }
+
+  res.json(usuario);
+});
+
+//salvar perfil usuario
+app.put("/usuarios/:id", async (req, res) => {
+  const usuarioAtualizado = await Usuario.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+    },
+  );
+
+  res.json(usuarioAtualizado);
+});
+
 //criar ONG
 app.post("/ongs", async (req, res) => {
   const novaOng = await Ong.create(req.body);
   res.json(novaOng);
+});
+
+//pegar ong
+app.get("/ongs/:id", async (req, res) => {
+  const ong = await Ong.findById(req.params.id);
+
+  if (!ong) {
+    return res.status(404).json({
+      mensagem: "ONG não encontrada",
+    });
+  }
+
+  res.json(ong);
+});
+
+//salvar perfil ong
+app.put("/ongs/:id", async (req, res) => {
+  const ongAtualizada = await Ong.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+
+  res.json(ongAtualizada);
 });
 
 //login usuario e ONG

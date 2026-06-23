@@ -34,19 +34,15 @@ function Login() {
         return;
       }
 
-      if (tipoLogin === "usuario") {
-        localStorage.setItem("usuarioLogado", JSON.stringify(dados));
-
-        localStorage.removeItem("ongLogada");
-
-        navigate("/usuario-home");
+      if (tipoLogin === "ong") {
+        localStorage.setItem("ongId", dados._id);
+      } else {
+        localStorage.setItem("usuarioId", dados._id);
       }
 
-      if (tipoLogin === "ong") {
-        localStorage.setItem("ongLogada", JSON.stringify(dados));
-
-        localStorage.removeItem("usuarioLogado");
-
+      if (tipoLogin === "usuario") {
+        navigate("/usuario-home");
+      } else {
         navigate("/ong-home");
       }
 

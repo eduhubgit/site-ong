@@ -11,19 +11,19 @@ function RegisterONG() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const [ong, setOng] = useState({
-  nome: "",
-  cnpj: "",
-  email: "",
-  cidade: "",
-  endereco: "",
-  nichoPrincipal: "",
-  chavePix: "",
-  diasFuncionamento: "",
-  horarioFuncionamento: "",
-  senha: "",
-  imagem: "",
-  sobre: "",
-  tipo: "ong",
+    nome: "",
+    cnpj: "",
+    email: "",
+    cidade: "",
+    endereco: "",
+    nichoPrincipal: "",
+    chavePix: "",
+    diasFuncionamento: "",
+    horarioFuncionamento: "",
+    senha: "",
+    imagem: "",
+    sobre: "",
+    tipo: "ong",
   });
 
   const mudarCampo = (evento) => {
@@ -80,7 +80,7 @@ function RegisterONG() {
   };
 
   //cadastrar ONG
-  
+
   const cadastrarONG = async (evento) => {
     evento.preventDefault();
 
@@ -107,33 +107,28 @@ function RegisterONG() {
       senha: ong.senha,
       imagem: ong.imagem,
       sobre: ong.sobre.trim(),
-      tipo: "ong"
+      tipo: "ong",
     };
 
     try {
+      const resposta = await fetch("http://localhost:3001/ongs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(novaONG),
+      });
 
-    await fetch("http://localhost:3001/ongs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(novaONG)
+      const ongCriada = await resposta.json();
 
-    });
+      localStorage.setItem("ongLogada", JSON.stringify(ongCriada));
+      localStorage.setItem("ongId", ongCriada._id);
 
-    alert("ONG cadastrada com sucesso");
-    navigate("/ong-home");
-
-  } catch (erro) {
-    console.log(erro);
-    alert("Erro ao cadastrar ONG");
-  }
-    
+      alert("Ong cadastrada com sucesso");
+      navigate("/ong-home");
+    } catch (erro) {
+      console.log(erro);
+      alert("Erro ao cadastrar ONG");
+    }
   };
-
-
-
-
 
   return (
     <div className="register-page">

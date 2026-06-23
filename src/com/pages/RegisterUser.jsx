@@ -11,13 +11,13 @@ function RegisterUser() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const [usuario, setUsuario] = useState({
-  nome: "",
-  email: "",
-  localizacao: "",
-  senha: "",
-  imagem: "",
-  bio: "",
-  tipo: "usuario",
+    nome: "",
+    email: "",
+    localizacao: "",
+    senha: "",
+    imagem: "",
+    sobre: "",
+    tipo: "usuario",
   });
 
   const mudarCampo = (evento) => {
@@ -64,48 +64,40 @@ function RegisterUser() {
     }
   };
 
+  //cadastrar ususario
 
+  const cadastrarUsuario = async (evento) => {
+    evento.preventDefault();
 
+    const novoUsuario = {
+      nome: usuario.nome.trim(),
+      email: usuario.email.trim().toLowerCase(),
+      localizacao: usuario.localizacao.trim(),
+      senha: usuario.senha,
+      imagem: usuario.imagem,
+      sobre: usuario.sobre.trim(),
+      tipo: "usuario",
+    };
 
-//cadastrar ususario
+    try {
+      const resposta = await fetch("http://localhost:3001/usuarios", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(novoUsuario),
+      });
 
-const cadastrarUsuario = async (evento) => {
-  evento.preventDefault();
+      const usuarioCriado = await resposta.json();
 
-  const novoUsuario = {
-    nome: usuario.nome.trim(),
-    email: usuario.email.trim().toLowerCase(),
-    localizacao: usuario.localizacao.trim(),
-    senha: usuario.senha,
-    imagem: usuario.imagem,
-    bio: usuario.sobre.trim(),
-    tipo: "usuario"
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuarioCriado));
+      localStorage.setItem("usuarioId", usuarioCriado._id);
+
+      alert("Usuário cadastrado com sucesso");
+      navigate("/usuario-home");
+    } catch (erro) {
+      console.log(erro);
+      alert("Erro ao cadastrar usuário");
+    }
   };
-
-  try {
-
-    await fetch("http://localhost:3001/usuarios", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(novoUsuario)
-
-    });
-
-    alert("Usuário cadastrado com sucesso");
-    navigate("/usuario-home");
-
-  } catch (erro) {
-    console.log(erro);
-    alert("Erro ao cadastrar usuário");
-  }
-
-  };
-
-
-
-  
 
   return (
     <div className="register-page">
@@ -242,7 +234,6 @@ const cadastrarUsuario = async (evento) => {
       </div>
     </div>
   );
-
 }
 
 export default RegisterUser;

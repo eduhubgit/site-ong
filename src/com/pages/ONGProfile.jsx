@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
@@ -6,42 +6,29 @@ import "../styles/ongHome.css";
 function ONGProfile() {
   const navigate = useNavigate();
 
-  const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
+  const [perfil, setPerfil] = useState(null);
 
   const [mostrarNormas, setMostrarNormas] = useState(false);
   const [mostrarSuporte, setMostrarSuporte] = useState(false);
   const [editando, setEditando] = useState(false);
 
-  const [perfil, setPerfil] = useState(
-    ongLogada
-      ? {
-          ...ongLogada,
-          cidade: ongLogada.cidade || ongLogada.localizacao || "",
-          endereco: ongLogada.endereco || "",
-          nichoPrincipal: ongLogada.nichoPrincipal || ongLogada.nicho || "",
-          chavePix: ongLogada.chavePix || "",
-          diasFuncionamento: ongLogada.diasFuncionamento || "",
-          horarioFuncionamento: ongLogada.horarioFuncionamento || "",
-          sobre: ongLogada.sobre || "",
-          imagem: ongLogada.imagem || "",
-        }
-      : {
-          nome: "",
-          cnpj: "",
-          email: "",
-          cidade: "",
-          endereco: "",
-          nichoPrincipal: "",
-          chavePix: "",
-          diasFuncionamento: "",
-          horarioFuncionamento: "",
-          senha: "",
-          imagem: "",
-          sobre: "",
-        }
-  );
+  const buscarOng = async () => {
+    const id = localStorage.getItem("ongId");
 
-  if (!ongLogada) {
+    const resposta = await fetch(`http://localhost:3001/ongs/${id}`);
+
+    const dados = await resposta.json();
+
+    setPerfil(dados);
+  };
+
+  useEffect(() => {
+    const id = localStorage.getItem("ongId");
+    if (!id) return;
+    buscarOng();
+  }, []);
+
+  if (!perfil) {
     return (
       <div className="profile-page">
         <div className="profile-card">
@@ -96,130 +83,36 @@ function ONGProfile() {
   };
 
   const cancelarEdicao = () => {
-    setPerfil({
-      ...ongLogada,
-      cidade: ongLogada.cidade || ongLogada.localizacao || "",
-      endereco: ongLogada.endereco || "",
-      nichoPrincipal: ongLogada.nichoPrincipal || ongLogada.nicho || "",
-      chavePix: ongLogada.chavePix || "",
-      diasFuncionamento: ongLogada.diasFuncionamento || "",
-      horarioFuncionamento: ongLogada.horarioFuncionamento || "",
-      sobre: ongLogada.sobre || "",
-      imagem: ongLogada.imagem || "",
-    });
-
     setEditando(false);
+
+    buscarOng();
   };
 
-  const salvarAlteracoes = () => {
+  const salvarAlteracoes = async () => {
     try {
-      const nome = perfil.nome.trim();
-      const cnpj = perfil.cnpj.trim();
-      const cidade = perfil.cidade.trim();
-      const endereco = perfil.endereco.trim();
-      const nichoPrincipal = perfil.nichoPrincipal.trim();
-      const chavePix = perfil.chavePix.trim();
-      const diasFuncionamento = perfil.diasFuncionamento.trim();
-      const horarioFuncionamento = perfil.horarioFuncionamento.trim();
-      const sobre = perfil.sobre.trim();
-
-      if (cnpj.length !== 14) {
-        alert("O CNPJ precisa ter exatamente 14 números.");
-        return;
-      }
-
-      if (
-        nome === "" ||
-        cidade === "" ||
-        endereco === "" ||
-        nichoPrincipal === "" ||
-        chavePix === "" ||
-        diasFuncionamento === "" ||
-        horarioFuncionamento === "" ||
-        sobre === ""
-      ) {
-        alert("Preencha todos os campos obrigatórios antes de salvar.");
-        return;
-      }
-
-      const ongsSalvas =
-        JSON.parse(localStorage.getItem("ongsCadastradas")) || [];
-
-      const perfilAtualizado = {
-        ...perfil,
-
-        nome,
-        cnpj,
-        cidade,
-        endereco,
-        nichoPrincipal,
-        chavePix,
-        diasFuncionamento,
-        horarioFuncionamento,
-        sobre,
-
-        localizacao: cidade,
-        nicho: nichoPrincipal,
-
-        email: ongLogada.email,
-        senha: ongLogada.senha,
-      };
-
-      const listaAtualizada = ongsSalvas.map((ong) => {
-        if (ong.email === ongLogada.email) {
-          return perfilAtualizado;
-        }
-
-        return ong;
+      const resposta = await fetch(`http://localhost:3001/ongs/${perfil._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(perfil),
       });
 
-      localStorage.setItem("ongsCadastradas", JSON.stringify(listaAtualizada));
-      localStorage.setItem("ongLogada", JSON.stringify(perfilAtualizado));
-
-      const necessidadesSalvas =
-        JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
-
-      const necessidadesAtualizadas = necessidadesSalvas.map((publicacao) => {
-        if (publicacao.ong.email === ongLogada.email) {
-          return {
-            ...publicacao,
-            ong: {
-              ...publicacao.ong,
-              nome: perfilAtualizado.nome,
-              cnpj: perfilAtualizado.cnpj,
-              cidade: perfilAtualizado.cidade,
-              localizacao: perfilAtualizado.cidade,
-              endereco: perfilAtualizado.endereco,
-              nichoPrincipal: perfilAtualizado.nichoPrincipal,
-              nicho: perfilAtualizado.nichoPrincipal,
-              chavePix: perfilAtualizado.chavePix,
-              diasFuncionamento: perfilAtualizado.diasFuncionamento,
-              horarioFuncionamento: perfilAtualizado.horarioFuncionamento,
-              imagem: perfilAtualizado.imagem,
-              sobre: perfilAtualizado.sobre,
-            },
-          };
-        }
-
-        return publicacao;
-      });
-
-      localStorage.setItem(
-        "necessidadesPublicadas",
-        JSON.stringify(necessidadesAtualizadas)
-      );
+      if (!resposta.ok) {
+        alert("Erro ao salvar");
+        return;
+      }
 
       alert("Perfil atualizado com sucesso!");
       setEditando(false);
+      buscarOng(); // recarrega dados atualizados
     } catch (erro) {
       console.error(erro);
-      alert("Não foi possível salvar. Tente usar uma imagem menor.");
+      alert("Erro ao salvar");
     }
   };
 
-  const inicialPerfil = perfil.nome
-    ? perfil.nome.charAt(0).toUpperCase()
-    : "O";
+  const inicialPerfil = perfil.nome ? perfil.nome.charAt(0).toUpperCase() : "O";
 
   return (
     <div className="profile-page">
@@ -227,7 +120,7 @@ function ONGProfile() {
         <div className="ong-logo">+COM</div>
 
         <div className="ong-nav-links">
-          <button type="button" onClick={() => navigate("/home")}>
+          <button type="button" onClick={() => navigate("/ong-home")}>
             Início
           </button>
 
@@ -247,7 +140,7 @@ function ONGProfile() {
         <button
           type="button"
           className="profile-close"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/ong-home")}
         >
           ×
         </button>
@@ -263,11 +156,7 @@ function ONGProfile() {
             {editando && (
               <label className="profile-image-button">
                 Alterar imagem
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={carregarImagem}
-                />
+                <input type="file" accept="image/*" onChange={carregarImagem} />
               </label>
             )}
           </div>

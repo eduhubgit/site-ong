@@ -6,7 +6,7 @@ const UsuarioSchema = new mongoose.Schema({
   localizacao: String,
   senha: String,
   imagem: String,
-  bio: String,
+  sobre: String,
   tipo: String,
 });
 

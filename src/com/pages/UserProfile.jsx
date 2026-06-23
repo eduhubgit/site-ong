@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
@@ -6,30 +6,34 @@ import "../styles/ongHome.css";
 function UserProfile() {
   const navigate = useNavigate();
 
-  const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  const [perfil, setPerfil] = useState(null);
 
   const [mostrarNormas, setMostrarNormas] = useState(false);
   const [mostrarSuporte, setMostrarSuporte] = useState(false);
   const [editando, setEditando] = useState(false);
 
-  const [perfil, setPerfil] = useState(
-    usuarioLogado || {
-      nome: "",
-      email: "",
-      localizacao: "",
-      imagem: "",
-      sobre: "",
-    }
-  );
+  const buscarUsuario = async () => {
+    const id = localStorage.getItem("usuarioId");
 
-  if (!usuarioLogado) {
+    const resposta = await fetch(`http://localhost:3001/usuarios/${id}`);
+
+    const dados = await resposta.json();
+
+    setPerfil(dados);
+  };
+
+  useEffect(() => {
+    const id = localStorage.getItem("usuarioId");
+    if (!id) return;
+    buscarUsuario();
+  }, []);
+
+  if (!perfil) {
     return (
       <div className="profile-page">
         <div className="profile-card">
-          <h1>Perfil do Doador</h1>
-
-          <p>Nenhum usuário está logado no momento.</p>
-
+          <h1>Perfil do Usuário</h1>
+          <p>Nenhum Usuário está logada no momento.</p>
           <Link to="/">Voltar para o login</Link>
         </div>
       </div>
@@ -70,59 +74,38 @@ function UserProfile() {
   };
 
   const cancelarEdicao = () => {
-    setPerfil(usuarioLogado);
+    buscarUsuario();
     setEditando(false);
   };
 
-  const salvarAlteracoes = () => {
+  const salvarAlteracoes = async () => {
     try {
-      const usuariosSalvos =
-        JSON.parse(localStorage.getItem("usuariosCadastrados")) || [];
+      const resposta = await fetch(
+        `http://localhost:3001/usuarios/${perfil._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(perfil),
+        },
+      );
 
-      if (
-        perfil.nome.trim() === "" ||
-        perfil.localizacao.trim() === "" ||
-        perfil.sobre.trim() === ""
-      ) {
-        alert("Preencha todos os campos obrigatórios antes de salvar.");
+      if (!resposta.ok) {
+        alert("Erro ao salvar");
         return;
       }
 
-      const perfilAtualizado = {
-        ...perfil,
-        nome: perfil.nome.trim(),
-        localizacao: perfil.localizacao.trim(),
-        sobre: perfil.sobre.trim(),
-        email: usuarioLogado.email,
-        senha: usuarioLogado.senha,
-      };
-
-      const listaAtualizada = usuariosSalvos.map((usuario) => {
-        if (usuario.email === usuarioLogado.email) {
-          return perfilAtualizado;
-        }
-
-        return usuario;
-      });
-
-      localStorage.setItem(
-        "usuariosCadastrados",
-        JSON.stringify(listaAtualizada)
-      );
-
-      localStorage.setItem("usuarioLogado", JSON.stringify(perfilAtualizado));
-
       alert("Perfil atualizado com sucesso!");
       setEditando(false);
+      buscarUsuario();
     } catch (erro) {
       console.error(erro);
-      alert("Não foi possível salvar. Tente usar uma imagem menor.");
+      alert("Erro ao salvar");
     }
   };
 
-  const inicialPerfil = perfil.nome
-    ? perfil.nome.charAt(0).toUpperCase()
-    : "U";
+  const inicialPerfil = perfil.nome ? perfil.nome.charAt(0).toUpperCase() : "U";
 
   return (
     <div className="profile-page">
@@ -166,11 +149,7 @@ function UserProfile() {
             {editando && (
               <label className="profile-image-button">
                 Alterar imagem
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={carregarImagem}
-                />
+                <input type="file" accept="image/*" onChange={carregarImagem} />
               </label>
             )}
           </div>
