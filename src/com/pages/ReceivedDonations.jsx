@@ -5,11 +5,9 @@ function ReceivedDonations() {
     <div style={{ padding: "30px" }}>
       <h1>Doações recebidas</h1>
 
-      <p>
-        Aqui futuramente aparecerão as doações recebidas pela ONG.
-      </p>
+      <p>Aqui futuramente aparecerão as doações recebidas pela ONG.</p>
 
-      <Link to="/home">Voltar para Home</Link>
+      <Link to="/ong-home">Voltar para Home</Link>
     </div>
   );
 }

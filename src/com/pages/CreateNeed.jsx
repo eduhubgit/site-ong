@@ -9,7 +9,7 @@ import "../styles/createNeed.css";
 function CreateNeed() {
   const navigate = useNavigate();
 
-  const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
+  const [ongLogada, setOngLogada] = useState(null);
 
   const categorias = [
     "Alimentos",
@@ -34,12 +34,30 @@ function CreateNeed() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+
+    const carregarOng = async () => {
+      const id = localStorage.getItem("ongId");
+
+      if (!id) {
+        alert("Você precisa estar logado como ONG.");
+        navigate("/");
+        return;
+      }
+
+      const resposta = await fetch(`http://localhost:3001/ongs/${id}`);
+
+      const dados = await resposta.json();
+
+      setOngLogada(dados);
+    };
+
+    carregarOng();
+  }, [navigate]);
 
   const alterarCategoria = (categoria) => {
     if (categoriasSelecionadas.includes(categoria)) {
       setCategoriasSelecionadas(
-        categoriasSelecionadas.filter((item) => item !== categoria)
+        categoriasSelecionadas.filter((item) => item !== categoria),
       );
     } else {
       setCategoriasSelecionadas([...categoriasSelecionadas, categoria]);
@@ -70,7 +88,9 @@ function CreateNeed() {
 
   const abrirConfirmacao = () => {
     if (categoriasSelecionadas.length === 0) {
-      alert("Selecione pelo menos uma categoria antes de publicar a necessidade.");
+      alert(
+        "Selecione pelo menos uma categoria antes de publicar a necessidade.",
+      );
       return;
     }
 
@@ -96,7 +116,7 @@ function CreateNeed() {
       !ongLogada.horarioFuncionamento
     ) {
       alert(
-        "Complete o perfil da ONG com chave Pix, endereço e horário de funcionamento antes de publicar."
+        "Complete o perfil da ONG com chave Pix, endereço e horário de funcionamento antes de publicar.",
       );
       navigate("/perfil-ong");
       return;
@@ -139,7 +159,7 @@ function CreateNeed() {
 
     localStorage.setItem(
       "necessidadesPublicadas",
-      JSON.stringify(listaAtualizada)
+      JSON.stringify(listaAtualizada),
     );
 
     alert("Necessidades publicadas com sucesso!");
@@ -161,7 +181,7 @@ function CreateNeed() {
                 </a>
 
         <div className="ong-nav-links">
-          <button type="button" onClick={() => navigate("/home")}>
+          <button type="button" onClick={() => navigate("/ong-home")}>
             Início
           </button>
 
@@ -174,7 +194,7 @@ function CreateNeed() {
           </button>
         </div>
 
-        <ProfileMenu tipo="ong" pessoa={ongLogada} />
+        <ProfileMenu tipo="ong" pessoa={ongLogada || {}} />
       </nav>
 
       <main className="create-need-main">
@@ -213,9 +233,10 @@ function CreateNeed() {
 
           <div className="need-form">
             <p className="need-helper-text">
-    Escreva um item e a quantidade dele por vez e clique em <strong>ADD</strong>.
-    Repita o processo para adicionar mais itens à lista.
-  </p>
+              Escreva um item e a quantidade dele por vez e clique em{" "}
+              <strong>ADD</strong>. Repita o processo para adicionar mais itens
+              à lista.
+            </p>
             <div className="need-input-group">
               <label>Necessidade</label>
               <input
