@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
 import "../styles/userHome.css";
+import logoImg from "../assets/comm.png";
 
 function DonationMessage() {
   const navigate = useNavigate();
@@ -202,7 +203,9 @@ function DonationMessage() {
   return (
     <div className="donation-page">
       <nav className="ong-navbar">
-        <div className="ong-logo">+COM</div>
+        <a href="#topo" className="ong-logo">
+          <img src={logoImg} alt="Logo +COM" />
+        </a>
 
         <div className="ong-nav-links">
           <button type="button" onClick={() => navigate("/usuario-home")}>
