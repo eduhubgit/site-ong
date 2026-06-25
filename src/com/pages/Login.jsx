@@ -3,6 +3,7 @@ import { useState } from "react";
 import "../styles/login.css";
 import loginImage from "../assets/login-image.png";
 import fundoImage from "../../assets/fundo.png";
+import mascoteDuvida from "../assets/duvida.png";
 
 function Login() {
   const navigate = useNavigate();
@@ -140,7 +141,7 @@ function Login() {
           </div>
 
           <div className="login-right">
-            <img src={loginImage} alt="Ilustração de login" />
+            <img src={mascoteDuvida} alt="Ilustração de login" />
           </div>
         </div>
       </div>

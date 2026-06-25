@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import "../styles/registerONG.css";
 import loginImage from "../assets/login-image.png";
 import fundoImage from "../../assets/fundo.png";
+import mascoteOlhando from "../assets/olhando.png"
 
 function RegisterONG() {
   const navigate = useNavigate();
@@ -334,7 +335,7 @@ function RegisterONG() {
           </form>
 
           <div className="register-right">
-            <img src={loginImage} alt="Ilustração de cadastro" />
+            <img src={mascoteOlhando} alt="Ilustração de cadastro" />
           </div>
         </div>
       </div>

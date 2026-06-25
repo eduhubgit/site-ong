@@ -219,7 +219,7 @@ body {
 }
 
 .register-right {
-  width: 48%;
+  width: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -227,7 +227,7 @@ body {
 
 .register-right img {
   width: 100%;
-  max-width: 450px;
+  max-width: 290px;
   object-fit: contain;
 }
 

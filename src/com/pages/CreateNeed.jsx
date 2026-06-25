@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
+import logoImg from "../assets/comm.png";
 
 import "../styles/ongHome.css";
 import "../styles/createNeed.css";
@@ -155,7 +156,9 @@ function CreateNeed() {
   return (
     <div className="create-need-page">
       <nav className="ong-navbar">
-        <div className="ong-logo">+COM</div>
+        <a href="#topo" className="ong-logo">
+                  <img src={logoImg} alt="Logo +COM" />
+                </a>
 
         <div className="ong-nav-links">
           <button type="button" onClick={() => navigate("/home")}>

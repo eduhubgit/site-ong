@@ -7,7 +7,7 @@
 
 .user-hero-section {
   min-height: 360px;
-  background-color: #FB5D82;  
+  background-color: #43AE82;  
   color: white;
 
   display: flex;
@@ -41,7 +41,7 @@
 }
 
 .user-hero-text p {
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 12px;
 }
@@ -54,7 +54,7 @@
 
 .user-hero-text span {
   display: block;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 23px;
   margin-bottom: 25px;
 }
@@ -73,7 +73,7 @@
 }
 
 .user-hero-image {
-  width: 45%;
+  width: 55%;
   z-index: 2;
 
   display: flex;
@@ -82,7 +82,7 @@
 
 .user-hero-image img {
   width: 380px;
-  max-height: 250px;
+  max-height: 350px;
   object-fit: contain;
 }
 
