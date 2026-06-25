@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
@@ -11,7 +11,22 @@ import heroImage from "../assets/login-image.png";
 function UserHome() {
   const navigate = useNavigate();
 
-  const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  const [usuarioLogado, setUsuarioLogado] = useState(null);
+
+  useEffect(() => {
+    const buscarUsuario = async () => {
+      const id = localStorage.getItem("usuarioId");
+
+      if (!id) return;
+
+      const resposta = await fetch(`http://localhost:3001/usuarios/${id}`);
+      const dados = await resposta.json();
+
+      setUsuarioLogado(dados);
+    };
+
+    buscarUsuario();
+  }, []);
 
   const [pesquisa, setPesquisa] = useState("");
   const [mostrarPix, setMostrarPix] = useState(false);
@@ -40,13 +55,11 @@ function UserHome() {
     JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
 
   const necessidadesFiltradas = necessidadesPublicadas.filter((publicacao) =>
-    publicacao.ong.nome.toLowerCase().includes(pesquisa.toLowerCase())
+    publicacao.ong.nome.toLowerCase().includes(pesquisa.toLowerCase()),
   );
 
   const ongsEncontradas = necessidadesFiltradas.reduce((lista, publicacao) => {
-    const ongJaExiste = lista.find(
-      (ong) => ong.email === publicacao.ong.email
-    );
+    const ongJaExiste = lista.find((ong) => ong.email === publicacao.ong.email);
 
     if (ongJaExiste) {
       ongJaExiste.quantidadePedidos += 1;
@@ -64,7 +77,7 @@ function UserHome() {
 
   const buscarPorCategoria = (categoria) => {
     return necessidadesFiltradas.filter((publicacao) =>
-      (publicacao.categorias || []).includes(categoria)
+      (publicacao.categorias || []).includes(categoria),
     );
   };
 
@@ -136,7 +149,9 @@ function UserHome() {
 
   const enviarContribuicaoMonetaria = () => {
     if (!usuarioLogado) {
-      alert("Você precisa estar logado como usuário para enviar uma contribuição.");
+      alert(
+        "Você precisa estar logado como usuário para enviar uma contribuição.",
+      );
       navigate("/");
       return;
     }
@@ -158,9 +173,9 @@ function UserHome() {
       id: Date.now(),
       publicacaoId: publicacaoPix.id,
 
-      nomeDoador: usuarioLogado.nome,
-      contato: usuarioLogado.email,
-      imagemDoador: usuarioLogado.imagem || "",
+      nomeDoador: usuarioLogado?.nome,
+      contato: usuarioLogado?.email,
+      imagemDoador: usuarioLogado?.imagem || "",
 
       ongNome: publicacaoPix.ong.nome,
       ongEmail: publicacaoPix.ong.email,
@@ -179,7 +194,7 @@ function UserHome() {
 
     localStorage.setItem(
       "contribuicoesMonetarias",
-      JSON.stringify(listaAtualizada)
+      JSON.stringify(listaAtualizada),
     );
 
     alert("Comprovante enviado para a ONG com sucesso!");
@@ -191,8 +206,8 @@ function UserHome() {
     <div className="user-home-page" id="topo-usuario">
       <nav className="ong-navbar">
         <a href="#topo" className="ong-logo">
-                  <img src={logoImg} alt="Logo +COM" />
-                </a>
+          <img src={logoImg} alt="Logo +COM" />
+        </a>
 
         <div className="ong-nav-links">
           <button type="button" onClick={irParaTopo}>
@@ -276,9 +291,7 @@ function UserHome() {
                 ongsEncontradas.map((ong) => (
                   <div className="ong-search-result" key={ong.email}>
                     <strong>{ong.nome}</strong>
-                    <span>
-                      {ong.quantidadePedidos} pedido(s) publicado(s)
-                    </span>
+                    <span>{ong.quantidadePedidos} pedido(s) publicado(s)</span>
                   </div>
                 ))
               )}
@@ -417,8 +430,8 @@ function UserHome() {
 
         <div className="footer-brand">
           <a href="#topo" className="ong-logo">
-                    <img src={logoImg} alt="Logo +COM" />
-                  </a>
+            <img src={logoImg} alt="Logo +COM" />
+          </a>
 
           <div className="footer-icons">
             <span>☏</span>

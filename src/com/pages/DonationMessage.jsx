@@ -8,13 +8,32 @@ function DonationMessage() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  const [usuarioLogado, setUsuarioLogado] = useState(null);
+
+  useEffect(() => {
+    const buscarUsuario = async () => {
+      const id = localStorage.getItem("usuarioId");
+
+      if (!id) {
+        alert("Você precisa estar logado");
+        navigate("/");
+        return;
+      }
+
+      const resposta = await fetch(`http://localhost:3001/usuarios/${id}`);
+      const dados = await resposta.json();
+
+      setUsuarioLogado(dados);
+    };
+
+    buscarUsuario();
+  }, []);
 
   const necessidadesPublicadas =
     JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
 
   const publicacao = necessidadesPublicadas.find(
-    (item) => String(item.id) === String(id)
+    (item) => String(item.id) === String(id),
   );
 
   const [quantidadesDoacao, setQuantidadesDoacao] = useState({});
@@ -115,7 +134,9 @@ function DonationMessage() {
     }
 
     if (dataEntrega < dataMinima || dataEntrega > dataMaxima) {
-      alert("A data de entrega precisa estar dentro do prazo de até 3 dias úteis.");
+      alert(
+        "A data de entrega precisa estar dentro do prazo de até 3 dias úteis.",
+      );
       return;
     }
 
