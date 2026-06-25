@@ -10,10 +10,6 @@ import mascoteJr from "../assets/mascote.png";
 import lapisJr from "../assets/lapis.png";
 import coracaoJr from "../assets/coracao.png";
 
-
-
- 
-
 function ONGHome() {
   const navigate = useNavigate();
 
@@ -92,24 +88,24 @@ function ONGHome() {
       </section>
 
       <section className="ong-actions">
-  <button 
-    className="action-card teal" 
-    type="button" 
-    onClick={() => navigate("/publicar-necessidades")}
-  >
-    <img src={lapisJr} alt="Lápis" className="action-icon" />
-    Publicar necessidades
-  </button>
-  
-  <button 
-    className="action-card blue" 
-    type="button" 
-    onClick={() => navigate("/necessidades-publicadas")}
-  >
-    <img src={coracaoJr} alt="Coração" className="action-icon" />
-    Necessidades publicadas
-  </button>
-</section>
+        <button
+          className="action-card teal"
+          type="button"
+          onClick={() => navigate("/publicar-necessidades")}
+        >
+          <img src={lapisJr} alt="Lápis" className="action-icon" />
+          Publicar necessidades
+        </button>
+
+        <button
+          className="action-card blue"
+          type="button"
+          onClick={() => navigate("/necessidades-publicadas")}
+        >
+          <img src={coracaoJr} alt="Coração" className="action-icon" />
+          Necessidades publicadas
+        </button>
+      </section>
 
       <section className="thanks-section">
         <div className="thanks-text">
@@ -136,7 +132,7 @@ function ONGHome() {
         <div className="footer-column">
           <h3>Links Rápidos</h3>
 
-          <button type="button" onClick={() => navigate("/home")}>
+          <button type="button" onClick={() => navigate("/ong-home")}>
             Início
           </button>
 
@@ -181,8 +177,8 @@ function ONGHome() {
 
         <div className="footer-brand">
           <a href="#topo" className="ong-logo">
-          <img src={logoImg} alt="Logo +COM" />
-        </a>
+            <img src={logoImg} alt="Logo +COM" />
+          </a>
 
           <div className="footer-icons">
             <span>☏</span>

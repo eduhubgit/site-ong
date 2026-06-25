@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
@@ -7,13 +7,34 @@ import "../styles/publishedNeeds.css";
 function PublishedNeeds() {
   const navigate = useNavigate();
 
-  const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
+  const [ongLogada, setOngLogada] = useState(null);
+
+  useEffect(() => {
+    const carregarOng = async () => {
+      const id = localStorage.getItem("ongId");
+
+      if (!id) {
+        navigate("/");
+        return;
+      }
+
+      const resposta = await fetch(`http://localhost:3001/ongs/${id}`);
+
+      const dados = await resposta.json();
+
+      setOngLogada(dados);
+
+      localStorage.setItem("ongLogada", JSON.stringify(dados));
+    };
+
+    carregarOng();
+  }, [navigate]);
 
   const todasNecessidades =
     JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
 
   const necessidadesDaOng = todasNecessidades.filter(
-    (publicacao) => publicacao.ong.email === ongLogada?.email
+    (publicacao) => publicacao.ong.email === ongLogada?.email,
   );
 
   const categoriasDisponiveis = [
@@ -31,12 +52,25 @@ function PublishedNeeds() {
 
   const [necessidades, setNecessidades] = useState(necessidadesDaOng);
 
+  useEffect(() => {
+    if (!ongLogada) return;
+
+    const todasNecessidades =
+      JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
+
+    const filtradas = todasNecessidades.filter(
+      (publicacao) => publicacao.ong.email === ongLogada.email,
+    );
+
+    setNecessidades(filtradas);
+  }, [ongLogada]);
+
   const [doacoes, setDoacoes] = useState(
-    JSON.parse(localStorage.getItem("doacoesRecebidas")) || []
+    JSON.parse(localStorage.getItem("doacoesRecebidas")) || [],
   );
 
   const [contribuicoesMonetarias, setContribuicoesMonetarias] = useState(
-    JSON.parse(localStorage.getItem("contribuicoesMonetarias")) || []
+    JSON.parse(localStorage.getItem("contribuicoesMonetarias")) || [],
   );
 
   const [mostrarNormas, setMostrarNormas] = useState(false);
@@ -69,11 +103,11 @@ function PublishedNeeds() {
   const salvarNecessidades = (novaListaGeral) => {
     localStorage.setItem(
       "necessidadesPublicadas",
-      JSON.stringify(novaListaGeral)
+      JSON.stringify(novaListaGeral),
     );
 
     const novaListaDaOng = novaListaGeral.filter(
-      (publicacao) => publicacao.ong.email === ongLogada?.email
+      (publicacao) => publicacao.ong.email === ongLogada?.email,
     );
 
     setNecessidades(novaListaDaOng);
@@ -110,7 +144,7 @@ function PublishedNeeds() {
   const removerRegistroConcluido = () => {
     if (tipoRegistroSelecionado === "doacao" && doacaoSelecionada) {
       const listaAtualizada = doacoes.filter(
-        (doacao) => doacao.id !== doacaoSelecionada.id
+        (doacao) => doacao.id !== doacaoSelecionada.id,
       );
 
       salvarDoacoes(listaAtualizada);
@@ -118,7 +152,7 @@ function PublishedNeeds() {
 
     if (tipoRegistroSelecionado === "contribuicao" && contribuicaoSelecionada) {
       const listaAtualizada = contribuicoesMonetarias.filter(
-        (contribuicao) => contribuicao.id !== contribuicaoSelecionada.id
+        (contribuicao) => contribuicao.id !== contribuicaoSelecionada.id,
       );
 
       salvarContribuicoes(listaAtualizada);
@@ -147,7 +181,7 @@ function PublishedNeeds() {
   const alterarCategoriaEditada = (categoria) => {
     if (categoriasEditadas.includes(categoria)) {
       setCategoriasEditadas(
-        categoriasEditadas.filter((item) => item !== categoria)
+        categoriasEditadas.filter((item) => item !== categoria),
       );
     } else {
       setCategoriasEditadas([...categoriasEditadas, categoria]);
@@ -186,7 +220,7 @@ function PublishedNeeds() {
     }
 
     const temCampoVazio = itensEditados.some(
-      (item) => item.nome.trim() === "" || item.quantidade.trim() === ""
+      (item) => item.nome.trim() === "" || item.quantidade.trim() === "",
     );
 
     if (temCampoVazio) {
@@ -234,15 +268,15 @@ function PublishedNeeds() {
       JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
 
     const listaAtualizada = necessidadesAtuais.filter(
-      (publicacao) => publicacao.id !== publicacaoSelecionada.id
+      (publicacao) => publicacao.id !== publicacaoSelecionada.id,
     );
 
     const doacoesAtualizadas = doacoes.filter(
-      (doacao) => doacao.publicacaoId !== publicacaoSelecionada.id
+      (doacao) => doacao.publicacaoId !== publicacaoSelecionada.id,
     );
 
     const contribuicoesAtualizadas = contribuicoesMonetarias.filter(
-      (contribuicao) => contribuicao.publicacaoId !== publicacaoSelecionada.id
+      (contribuicao) => contribuicao.publicacaoId !== publicacaoSelecionada.id,
     );
 
     salvarNecessidades(listaAtualizada);
@@ -268,7 +302,7 @@ function PublishedNeeds() {
 
   const removerPublicacao = (id) => {
     const confirmar = window.confirm(
-      "Tem certeza que deseja remover essa publicação?"
+      "Tem certeza que deseja remover essa publicação?",
     );
 
     if (!confirmar) {
@@ -279,15 +313,15 @@ function PublishedNeeds() {
       JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
 
     const listaAtualizada = necessidadesAtuais.filter(
-      (publicacao) => publicacao.id !== id
+      (publicacao) => publicacao.id !== id,
     );
 
     const doacoesAtualizadas = doacoes.filter(
-      (doacao) => doacao.publicacaoId !== id
+      (doacao) => doacao.publicacaoId !== id,
     );
 
     const contribuicoesAtualizadas = contribuicoesMonetarias.filter(
-      (contribuicao) => contribuicao.publicacaoId !== id
+      (contribuicao) => contribuicao.publicacaoId !== id,
     );
 
     salvarNecessidades(listaAtualizada);
@@ -311,14 +345,14 @@ function PublishedNeeds() {
 
   const doacoesDaPublicacaoSelecionada = publicacaoSelecionada
     ? doacoes.filter(
-        (doacao) => doacao.publicacaoId === publicacaoSelecionada.id
+        (doacao) => doacao.publicacaoId === publicacaoSelecionada.id,
       )
     : [];
 
   const contribuicoesDaPublicacaoSelecionada = publicacaoSelecionada
     ? contribuicoesMonetarias.filter(
         (contribuicao) =>
-          contribuicao.publicacaoId === publicacaoSelecionada.id
+          contribuicao.publicacaoId === publicacaoSelecionada.id,
       )
     : [];
 
@@ -328,7 +362,7 @@ function PublishedNeeds() {
         <div className="ong-logo">+COM</div>
 
         <div className="ong-nav-links">
-          <button type="button" onClick={() => navigate("/home")}>
+          <button type="button" onClick={() => navigate("/ong-home")}>
             Início
           </button>
 
@@ -369,11 +403,11 @@ function PublishedNeeds() {
           <div className="published-list">
             {necessidades.map((publicacao) => {
               const quantidadeDoacoes = doacoes.filter(
-                (doacao) => doacao.publicacaoId === publicacao.id
+                (doacao) => doacao.publicacaoId === publicacao.id,
               ).length;
 
               const quantidadeContribuicoes = contribuicoesMonetarias.filter(
-                (contribuicao) => contribuicao.publicacaoId === publicacao.id
+                (contribuicao) => contribuicao.publicacaoId === publicacao.id,
               ).length;
 
               return (
@@ -684,9 +718,7 @@ function PublishedNeeds() {
           <div className="modal-box edit-need-modal">
             <h2>Editar necessidade</h2>
 
-            <p>
-              Atualize as categorias e os itens após a doação recebida.
-            </p>
+            <p>Atualize as categorias e os itens após a doação recebida.</p>
 
             {doacaoSelecionada?.itensDoacao &&
               doacaoSelecionada.itensDoacao.length > 0 && (
@@ -715,8 +747,7 @@ function PublishedNeeds() {
 
                 <p>
                   Comprovante:{" "}
-                  {contribuicaoSelecionada.comprovanteNome ||
-                    "Arquivo enviado"}
+                  {contribuicaoSelecionada.comprovanteNome || "Arquivo enviado"}
                 </p>
               </div>
             )}
@@ -769,7 +800,7 @@ function PublishedNeeds() {
                       alterarItemEditado(
                         item.id,
                         "quantidade",
-                        evento.target.value
+                        evento.target.value,
                       )
                     }
                   />

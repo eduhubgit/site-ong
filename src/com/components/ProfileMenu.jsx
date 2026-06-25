@@ -9,7 +9,10 @@ function ProfileMenu({ tipo, pessoa }) {
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
 
   const nome = pessoa?.nome || (tipo === "ong" ? "ONG" : "Usuário");
-  const inicialPerfil = nome.charAt(0).toUpperCase();
+
+  const inicialPerfil = nome ? nome.charAt(0).toUpperCase() : "?";
+
+  const imagemPerfil = pessoa?.imagem || null;
 
   const irParaPerfil = () => {
     if (tipo === "ong") {
@@ -29,11 +32,14 @@ function ProfileMenu({ tipo, pessoa }) {
   const confirmarDesconectar = () => {
     if (tipo === "ong") {
       localStorage.removeItem("ongLogada");
+      localStorage.removeItem("ongId");
     } else {
       localStorage.removeItem("usuarioLogado");
+      localStorage.removeItem("usuarioId");
     }
 
     setMostrarConfirmacao(false);
+
     navigate("/");
   };
 
@@ -42,12 +48,16 @@ function ProfileMenu({ tipo, pessoa }) {
       <button
         type="button"
         className="ong-profile-circle"
-        onClick={() => setMenuAberto(!menuAberto)}
+        onClick={() => setMenuAberto((prev) => !prev)}
       >
-        {pessoa?.imagem ? (
-          <img src={pessoa.imagem} alt="Foto de perfil" />
+        {imagemPerfil ? (
+          <img
+            src={imagemPerfil}
+            alt="Foto de perfil"
+            className="profile-image"
+          />
         ) : (
-          inicialPerfil
+          <span>{inicialPerfil}</span>
         )}
       </button>
 
