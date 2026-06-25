@@ -19,7 +19,7 @@ html {
 .ong-navbar {
   width: 100%;
   height: 80px;
-  background-color: #ffae2b;
+  background-color: #FB5D82;
 
   position: fixed;
   top: 0;
@@ -35,10 +35,17 @@ html {
 }
 
 .ong-logo {
-  color: white;
-  font-size: 36px;
-  font-weight: 900;
-  letter-spacing: 3px;
+  display: flex;
+  align-items: center;
+  height: 100%; 
+  
+}
+
+.ong-logo img {
+  height: 40px; 
+  width: auto;  
+  object-fit: contain;
+  
 }
 
 .ong-nav-links {
@@ -58,6 +65,8 @@ html {
   font-size: 20px;
   font-weight: 900;
   cursor: pointer;
+
+  
 }
 
 .ong-nav-links a:hover,
@@ -111,14 +120,14 @@ html {
 }
 
 .ong-location {
-  color: #009688;
+  color: #43AE82;
   font-size: 13px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
 .ong-hero-text h1 {
-  color: #009688;
+  color: #262626;
   font-size: 42px;
   line-height: 42px;
   margin-bottom: 15px;
@@ -132,7 +141,7 @@ html {
 }
 
 .ong-hero-text button {
-  background-color: #009688;
+  background-color: #43AE82;
   color: white;
 
   border: none;
@@ -151,34 +160,33 @@ html {
 }
 
 .ong-hero-image img {
-  width: 360px;
+  max-height: 400px; 
+  width: auto;        
+  object-fit: contain;
+  display: block;
 }
 
 .ong-info-section {
-  min-height: 380px;
-
+  min-height: 520px;
   display: flex;
   align-items: center;
-
-  background-color: #eeeeee;
+  background-color: white;
 }
 
 .ong-info-image {
   width: 55%;
-  height: 380px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background-color: #eeeeee;
+  height: 520px;
+  position: relative; 
   overflow: hidden;
+  background-color: transparent;
 }
 
 .ong-info-image img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover; 
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%);
 }
 
 .ong-info-text {
@@ -188,7 +196,7 @@ html {
 
 .ong-info-text p {
   color: #009688;
-  font-size: 13px;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 8px;
 }
@@ -199,7 +207,7 @@ html {
 }
 
 .ong-info-text span {
-  font-size: 14px;
+  font-size: 20px;
   line-height: 22px;
   color: #333;
 }
@@ -207,28 +215,30 @@ html {
 .ong-actions {
   display: flex;
   width: 100%;
-  height: 140px;
+  height: 210px;
 }
 
 .action-card {
   flex: 1;
-
   border: none;
-
-  color: white;
-  font-size: 18px;
+  border-radius: 0;
+  color: #262626;
+  font-size: 22px; 
   font-weight: bold;
-
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center; 
   align-items: flex-start;
-
-  padding-left: 35px;
-  gap: 8px;
-
+  padding-left: 45px;      
+  text-align: left;        
+  gap: 12px; 
   cursor: pointer;
-  text-align: left;
+}
+
+.action-icon {
+  height: 50px; 
+  width: auto;
+  object-fit: contain;
 }
 
 .action-card span {
@@ -236,11 +246,11 @@ html {
 }
 
 .teal {
-  background-color: #009688;
+  background-color: #FFF67E;
 }
 
 .blue {
-  background-color: #08a9dc;
+  background-color: #FB5D82;
 }
 
 .orange {
@@ -501,8 +511,8 @@ html {
 
 .ong-nav-links a,
 .ong-nav-links button {
-  background-color: transparent;
-  color: #111;
+  background-color: transparent !important;
+  color: white;
 
   padding: 10px 18px;
   border-radius: 10px;
@@ -515,9 +525,9 @@ html {
 
 .ong-nav-links a:hover,
 .ong-nav-links button:hover {
-  background-color: rgba(255, 255, 255, 0.35);
-  color: #111;
-  transform: scale(1.08);
+  background-color: transparent !important;
+  color: white;
+  transform: scale(1.02);
 }
 
 .action-card {
@@ -685,7 +695,7 @@ html {
 
 .ong-footer {
   min-height: 260px;
-  background-color: #009688;
+  background-color: #43AE82;
   color: white;
 
   display: grid;
@@ -747,7 +757,7 @@ html {
 .footer-icons {
   display: flex;
   gap: 18px;
-  font-size: 22px;
+  font-size: 30px;
 }
 
 .footer-icons span {
@@ -930,7 +940,7 @@ html {
 }
 
 .profile-input-group input[readonly] {
-  background-color: #eeeeee;
+  background-color: transparent;
   cursor: not-allowed;
 }
 

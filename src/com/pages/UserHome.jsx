@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
 import "../styles/userHome.css";
+import logoImg from "../assets/comm.png";
+import mascoteSorrindo from "../assets/sorrindo.png";
 
 import heroImage from "../assets/login-image.png";
 
@@ -188,7 +190,9 @@ function UserHome() {
   return (
     <div className="user-home-page" id="topo-usuario">
       <nav className="ong-navbar">
-        <div className="ong-logo">+COM</div>
+        <a href="#topo" className="ong-logo">
+                  <img src={logoImg} alt="Logo +COM" />
+                </a>
 
         <div className="ong-nav-links">
           <button type="button" onClick={irParaTopo}>
@@ -224,7 +228,7 @@ function UserHome() {
         </div>
 
         <div className="user-hero-image">
-          <img src={heroImage} alt="Ilustração de doações" />
+          <img src={mascoteSorrindo} alt="Ilustração de doações" />
         </div>
       </section>
 
@@ -412,7 +416,9 @@ function UserHome() {
         </div>
 
         <div className="footer-brand">
-          <h2>+COM</h2>
+          <a href="#topo" className="ong-logo">
+                    <img src={logoImg} alt="Logo +COM" />
+                  </a>
 
           <div className="footer-icons">
             <span>☏</span>

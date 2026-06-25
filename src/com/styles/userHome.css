@@ -7,7 +7,7 @@
 
 .user-hero-section {
   min-height: 360px;
-  background-color: #009688;
+  background-color: #FB5D82;  
   color: white;
 
   display: flex;
@@ -131,11 +131,16 @@
   border: none;
   border-radius: 25px;
 
-  background-color: #08a9dc;
+  background-color: #43AE82; 
   color: white;
 
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-bar button:hover {
+  background-color: #36956e; 
 }
 
 .search-results {
@@ -161,7 +166,7 @@
 }
 
 .ong-search-result strong {
-  color: #009688;
+  color: #FB5D82; 
 }
 
 .ong-search-result span {
@@ -212,7 +217,7 @@
 
   overflow: hidden;
 
-  background-color: #08a9dc;
+  background-color: #43AE82;
 
   flex-shrink: 0;
 }
@@ -251,7 +256,7 @@
 
 .user-need-location {
   font-size: 13px;
-  color: #009688;
+  color: #FB5D82; 
   font-weight: bold;
   margin-bottom: 12px;
 }
@@ -289,12 +294,12 @@
 }
 
 .user-need-buttons button:first-child {
-  background-color: #08a9dc;
+  background-color: #43AE82; 
   color: white;
 }
 
 .user-need-buttons button:last-child {
-  background-color: #009688;
+  background-color: #FB5D82; 
   color: white;
 }
 
@@ -336,7 +341,7 @@
 .donation-card h1 {
   font-size: 38px;
   margin-bottom: 15px;
-  color: #009688;
+  color: #FB5D82;
 }
 
 .donation-card p {
@@ -407,7 +412,7 @@
 }
 
 .donation-buttons button:first-child {
-  background-color: #009688;
+  background-color: #FB5D82; 
   color: white;
 }
 
@@ -419,7 +424,7 @@
 /* ---- Updated card buttons ---- */
 
 .btn-pedidos {
-  background-color: #08a9dc;
+  background-color: #43AE82; 
   color: white;
   border: none;
   border-radius: 10px;
@@ -427,18 +432,19 @@
   font-weight: bold;
   cursor: pointer;
   font-size: 14px;
-  transition: filter 0.2s;
+  transition: background-color 0.2s ease;
 }
 
 .btn-pedidos:hover {
-  filter: brightness(0.9);
+  background-color: #36956e; 
+  filter: none;
 }
 
 .btn-contribuir {
   display: flex;
   align-items: center;
   gap: 6px;
-  background-color: #009688;
+  background-color: #FB5D82; 
   color: white;
   border: none;
   border-radius: 10px;
@@ -446,11 +452,12 @@
   font-weight: bold;
   cursor: pointer;
   font-size: 14px;
-  transition: filter 0.2s;
+  transition: background-color 0.2s ease;
 }
 
 .btn-contribuir:hover {
-  filter: brightness(0.9);
+  background-color: #de4b6f; 
+  filter: none;
 }
 
 .contribuir-icon {
@@ -518,7 +525,7 @@
   border-radius: 12px;
   overflow: hidden;
   flex-shrink: 0;
-  background-color: #08a9dc;
+  background-color: #43AE82; 
 }
 
 .modal-ong-image img {
@@ -604,13 +611,13 @@
 }
 
 .valor-btn:hover {
-  border-color: #009688;
+  border-color: #FB5D82; 
   transform: scale(1.03);
 }
 
 .valor-btn-selecionado {
-  background-color: #009688;
-  border-color: #009688;
+  background-color: #FB5D82; 
+  border-color: #FB5D82; 
   color: white;
 }
 
@@ -643,7 +650,7 @@
 
 .btn-confirmar-contribuicao {
   width: 100%;
-  background-color: #009688;
+  background-color: #FB5D82; 
   color: white;
   border: none;
   border-radius: 10px;
@@ -651,11 +658,12 @@
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: filter 0.2s;
+  transition: background-color 0.2s ease;
 }
 
 .btn-confirmar-contribuicao:hover {
-  filter: brightness(0.9);
+  background-color: #de4b6f; 
+  filter: none;
 }
 
 /* ---- Success Modal ---- */
@@ -675,7 +683,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background-color: #009688;
+  background-color: #FB5D82; 
   color: white;
   font-size: 34px;
   display: flex;
@@ -705,7 +713,7 @@
 
 .btn-pornada {
   width: 100%;
-  background-color: #08a9dc;
+  background-color: #43AE82; 
   color: white;
   border: none;
   border-radius: 10px;
@@ -714,11 +722,12 @@
   font-weight: bold;
   cursor: pointer;
   margin-bottom: 10px;
-  transition: filter 0.2s;
+  transition: background-color 0.2s ease;
 }
 
 .btn-pornada:hover {
-  filter: brightness(0.9);
+  background-color: #36956e; 
+  filter: none;
 }
 
 .btn-fechar-sucesso {
@@ -791,7 +800,7 @@
 }
 
 .historico-status-comprovado {
-  color: #009688;
+  color: #FB5D82; /* ⬅️ Alterado (mantendo consistência visual) */
 }
 
 .historico-status-aguardando {
@@ -812,7 +821,7 @@
 }
 
 .btn-voltar-historico {
-  background-color: #009688;
+  background-color: #FB5D82; /* ⬅️ Alterado */
   color: white;
   border: none;
   border-radius: 10px;
@@ -820,12 +829,13 @@
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
-  transition: filter 0.2s;
+  transition: background-color 0.2s ease;
   margin-top: 0 !important;
 }
 
 .btn-voltar-historico:hover {
-  filter: brightness(0.9);
+  background-color: #de4b6f; /* ⬅️ Tom escurecido do coral */
+  filter: none;
 }
 
 /* ---- Profile history button ---- */
@@ -895,13 +905,13 @@
 }
 
 .user-card-items-list::-webkit-scrollbar-thumb {
-  background-color: #009688;
+  background-color: #FB5D82; /* ⬅️ Alterado */
   border-radius: 20px;
 }
 
 .user-card-items-list h4 {
   margin-bottom: 8px;
-  color: #009688;
+  color: #FB5D82; /* ⬅️ Alterado */
 }
 
 .user-card-item {
@@ -937,12 +947,12 @@
 }
 
 .btn-pedidos {
-  background-color: #08a9dc !important;
+  background-color: #43AE82 !important; /* ⬅️ Alterado */
   color: white !important;
 }
 
 .btn-contribuir {
-  background-color: #009688 !important;
+  background-color: #FB5D82 !important; /* ⬅️ Alterado */
   color: white !important;
 }
 
@@ -974,7 +984,7 @@
 .pix-key-box {
   background-color: #f4f4f4;
 
-  border: 1px dashed #009688;
+  border: 1px dashed #FB5D82; /* ⬅️ Alterado */
   border-radius: 12px;
 
   padding: 16px;
@@ -989,7 +999,7 @@
 }
 
 .pix-key-box strong {
-  color: #009688;
+  color: #FB5D82; /* ⬅️ Alterado */
 }
 
 .pix-key-box span {
@@ -997,7 +1007,7 @@
 }
 
 .pix-modal button:not(.modal-close-btn) {
-  background-color: #009688;
+  background-color: #FB5D82; /* ⬅️ Alterado */
   color: white;
 }
 
@@ -1033,7 +1043,7 @@
 
 .donation-card h1 {
   font-size: 38px;
-  color: #009688;
+  color: #FB5D82; /* ⬅️ Alterado */
   margin-bottom: 15px;
 }
 
@@ -1060,12 +1070,12 @@
 }
 
 .donation-needed-list::-webkit-scrollbar-thumb {
-  background-color: #08a9dc;
+  background-color: #43AE82; /* ⬅️ Alterado */
   border-radius: 20px;
 }
 
 .donation-needed-list h2 {
-  color: #009688;
+  color: #FB5D82; /* ⬅️ Alterado */
   margin-bottom: 16px;
 }
 
@@ -1120,7 +1130,7 @@
 .ong-delivery-info {
   background-color: #e9f8f6;
 
-  border-left: 5px solid #009688;
+  border-left: 5px solid #FB5D82; /* ⬅️ Alterado */
   border-radius: 12px;
 
   padding: 18px;
@@ -1129,7 +1139,7 @@
 }
 
 .ong-delivery-info h2 {
-  color: #009688;
+  color: #FB5D82; /* ⬅️ Alterado */
   margin-bottom: 12px;
 }
 
@@ -1210,7 +1220,7 @@
 }
 
 .donation-buttons button:first-child {
-  background-color: #009688;
+  background-color: #FB5D82; /* ⬅️ Alterado */
   color: white;
 }
 
@@ -1218,7 +1228,6 @@
   background-color: #777;
   color: white;
 }
-
 
 .donor-guide-section {
   width: 100%;
@@ -1235,7 +1244,7 @@
 }
 
 .donor-guide-section h2 {
-  color: #009688;
+  color: #FB5D82; /* ⬅️ Alterado */
   margin-bottom: 12px;
 }
 
@@ -1271,7 +1280,6 @@
   color: #004f9e !important;
 }
 
-
 .monetary-proof-section {
   margin-top: 24px;
 
@@ -1287,7 +1295,7 @@
 }
 
 .monetary-proof-section h3 {
-  color: #009688;
+  color: #FB5D82; /* ⬅️ Alterado */
 }
 
 .monetary-proof-section p {
@@ -1339,7 +1347,7 @@
 }
 
 .send-proof-button {
-  background-color: #08a9dc !important;
+  background-color: #43AE82 !important; 
   color: white !important;
 }
 
@@ -1358,7 +1366,7 @@
 }
 
 .pix-modal::-webkit-scrollbar-thumb {
-  background-color: #009688;
+  background-color: #FB5D82; 
   border-radius: 20px;
 }
 

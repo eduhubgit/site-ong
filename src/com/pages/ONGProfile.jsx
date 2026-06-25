@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
+import logoImg from "../assets/comm.png";
 
 function ONGProfile() {
   const navigate = useNavigate();
@@ -117,7 +118,9 @@ function ONGProfile() {
   return (
     <div className="profile-page">
       <nav className="ong-navbar">
-        <div className="ong-logo">+COM</div>
+        <a href="#topo" className="ong-logo">
+                  <img src={logoImg} alt="Logo +COM" />
+                </a>
 
         <div className="ong-nav-links">
           <button type="button" onClick={() => navigate("/ong-home")}>

@@ -112,7 +112,7 @@ body {
 }
 
 .input-group input:focus {
-  border-color: #11a8df;
+  border-color: #43AE82;
 }
 
 .login-options {
@@ -141,14 +141,14 @@ body {
 
 .login-options a:hover {
   text-decoration: underline;
-  color: #11a8df;
+  color: #43AE82;
 }
 
 .login-left button {
   height: 50px;
   border: none;
   border-radius: 12px;
-  background-color: #11a8df;
+  background-color: #43AE82;
   color: white;
   font-size: 18px;
   font-weight: bold;
@@ -158,7 +158,7 @@ body {
 }
 
 .login-left button:hover {
-  background-color: #0e8fc0;
+  background-color: #43AE82;
 }
 
 .register-text {
@@ -209,19 +209,17 @@ body {
 }
 
 .login-title-row .login-type-card {
-  position: static;
-
+  position: absolute; 
+  top: 70px;         
+  right: 40px;        
   background-color: white;
-
   padding: 8px 12px;
-
   border-radius: 12px;
-
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-
   display: flex;
   align-items: center;
   gap: 10px;
+  z-index: 3;
 }
 
 .login-title-row .login-type-card label {

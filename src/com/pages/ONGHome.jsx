@@ -4,6 +4,15 @@ import ProfileMenu from "../components/ProfileMenu";
 import "../styles/ongHome.css";
 import heroImage from "../assets/login-image.png";
 import donationPhoto from "../assets/donation-photo.jpg";
+import logoImg from "../assets/comm.png";
+import meninaFoto from "../assets/menina.png";
+import mascoteJr from "../assets/mascote.png";
+import lapisJr from "../assets/lapis.png";
+import coracaoJr from "../assets/coracao.png";
+
+
+
+ 
 
 function ONGHome() {
   const navigate = useNavigate();
@@ -19,7 +28,9 @@ function ONGHome() {
   return (
     <div className="ong-home-page" id="topo">
       <nav className="ong-navbar">
-        <div className="ong-logo">+COM</div>
+        <a href="#topo" className="ong-logo">
+          <img src={logoImg} alt="Logo +COM" />
+        </a>
 
         <div className="ong-nav-links">
           <a href="#topo">Início</a>
@@ -58,13 +69,13 @@ function ONGHome() {
         </div>
 
         <div className="ong-hero-image">
-          <img src={heroImage} alt="Ilustração de doação" />
+          <img src={mascoteJr} alt="Ilustração de doação" />
         </div>
       </section>
 
       <section className="ong-info-section">
         <div className="ong-info-image">
-          <img src={donationPhoto} alt="Doação de alimentos" />
+          <img src={meninaFoto} alt="Doação de alimentos" />
         </div>
 
         <div className="ong-info-text">
@@ -81,24 +92,24 @@ function ONGHome() {
       </section>
 
       <section className="ong-actions">
-        <button
-          type="button"
-          className="action-card teal"
-          onClick={() => navigate("/publicar-necessidades")}
-        >
-          <span>＋</span>
-          Publicar necessidades
-        </button>
-
-        <button
-          type="button"
-          className="action-card blue"
-          onClick={() => navigate("/necessidades-publicadas")}
-        >
-          <span>▣</span>
-          Necessidades publicadas
-        </button>
-      </section>
+  <button 
+    className="action-card teal" 
+    type="button" 
+    onClick={() => navigate("/publicar-necessidades")}
+  >
+    <img src={lapisJr} alt="Lápis" className="action-icon" />
+    Publicar necessidades
+  </button>
+  
+  <button 
+    className="action-card blue" 
+    type="button" 
+    onClick={() => navigate("/necessidades-publicadas")}
+  >
+    <img src={coracaoJr} alt="Coração" className="action-icon" />
+    Necessidades publicadas
+  </button>
+</section>
 
       <section className="thanks-section">
         <div className="thanks-text">
@@ -169,7 +180,9 @@ function ONGHome() {
         </div>
 
         <div className="footer-brand">
-          <h2>+COM</h2>
+          <a href="#topo" className="ong-logo">
+          <img src={logoImg} alt="Logo +COM" />
+        </a>
 
           <div className="footer-icons">
             <span>☏</span>

@@ -159,7 +159,7 @@ body {
   height: 50px;
   border: none;
   border-radius: 12px;
-  background-color: #0aa2dd;
+  background-color: #43AE82;
   color: white;
   font-size: 18px;
   font-weight: bold;
@@ -169,7 +169,7 @@ body {
 }
 
 .btn-criar-ong:hover {
-  background-color: #088dbf;
+  background-color: #36956e;
 }
 
 .login-link {
@@ -256,7 +256,7 @@ body {
 }
 
 .register-left::-webkit-scrollbar-thumb {
-  background-color: #08a9dc;
+  background-color: #43AE82;
   border-radius: 20px;
 }
 
