@@ -5,6 +5,8 @@ import "../styles/ongHome.css";
 import "../styles/userHome.css";
 import logoImg from "../assets/comm.png";
 import mascoteSorrindo from "../assets/sorrindo.png";
+import fonteLogo from "../assets/PlaywriteGBJ-VariableFont_wght.ttf";
+
 
 import heroImage from "../assets/login-image.png";
 

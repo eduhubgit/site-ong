@@ -9,6 +9,7 @@ import meninaFoto from "../assets/menina.png";
 import mascoteJr from "../assets/mascote.png";
 import lapisJr from "../assets/lapis.png";
 import coracaoJr from "../assets/coracao.png";
+import fonteLogo from "../assets/PlaywriteGBJ-VariableFont_wght.ttf";
 
 function ONGHome() {
   const navigate = useNavigate();

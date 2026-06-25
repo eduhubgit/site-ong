@@ -128,9 +128,10 @@ html {
 
 .ong-hero-text h1 {
   color: #262626;
-  font-size: 42px;
+  font-size: 45px;
   line-height: 42px;
   margin-bottom: 15px;
+  font-family: fonteLogo;
 }
 
 .ong-hero-text p {
