@@ -153,7 +153,7 @@ function UserHome() {
     leitor.readAsDataURL(arquivo);
   };
 
-  const enviarContribuicaoMonetaria = () => {
+  const enviarContribuicaoMonetaria = async () => {
     if (!usuarioLogado) {
       alert(
         "Você precisa estar logado como usuário para enviar uma contribuição.",
@@ -172,39 +172,29 @@ function UserHome() {
       return;
     }
 
-    const contribuicoesSalvas =
-      JSON.parse(localStorage.getItem("contribuicoesMonetarias")) || [];
-
     const novaContribuicao = {
-      id: Date.now(),
-      publicacaoId: publicacaoPix._id,
-
-      nomeDoador: usuarioLogado?.nome,
-      contato: usuarioLogado?.email,
-      imagemDoador: usuarioLogado?.imagem || "",
-
-      ongNome: publicacaoPix.ongId.nome,
-      ongEmail: publicacaoPix.ongId.email,
-
+      necessidadeId: publicacaoPix._id,
+      ongId: publicacaoPix.ongId._id,
+      nomeDoador: usuarioLogado.nome,
+      emailDoador: usuarioLogado.email,
+      imagemDoador: usuarioLogado.imagem || "",
       comprovanteNome: comprovante.nome,
       comprovanteTipo: comprovante.tipo,
       comprovanteArquivo: comprovante.arquivo,
-
       mensagem: mensagemContribuicao.trim(),
-
       status: "Pendente",
       dataEnvio: new Date().toLocaleString("pt-BR"),
     };
 
-    const listaAtualizada = [...contribuicoesSalvas, novaContribuicao];
+    await fetch("http://localhost:3001/contribuicoes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(novaContribuicao),
+    });
 
-    localStorage.setItem(
-      "contribuicoesMonetarias",
-      JSON.stringify(listaAtualizada),
-    );
-
-    alert("Comprovante enviado para a ONG com sucesso!");
-
+    alert("Comprovante enviado para a ONG!");
     fecharPix();
   };
 

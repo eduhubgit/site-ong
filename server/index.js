@@ -5,6 +5,7 @@ import connectDB from "./mongo.js";
 import Usuario from "./models/usuario.js";
 import Ong from "./models/ong.js";
 import Necessidade from "./models/necessidade.js";
+import Contribuicao from "./models/contribuicao.js";
 
 dotenv.config();
 
@@ -167,6 +168,25 @@ app.delete("/necessidades/:id", async (req, res) => {
       erro: error.message,
     });
   }
+});
+
+app.post("/contribuicoes", async (req, res) => {
+  try {
+    const nova = await Contribuicao.create(req.body);
+
+    res.json(nova);
+  } catch (erro) {
+    res.status(500).json({
+      erro: erro.message,
+    });
+  }
+});
+
+app.get("/contribuicoes/ong/:id", async (req, res) => {
+  const lista = await Contribuicao.find({
+    ongId: req.params.id,
+  });
+  res.json(lista);
 });
 
 //liga o back end

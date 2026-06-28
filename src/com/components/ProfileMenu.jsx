@@ -31,10 +31,8 @@ function ProfileMenu({ tipo, pessoa }) {
 
   const confirmarDesconectar = () => {
     if (tipo === "ong") {
-      localStorage.removeItem("ongLogada");
       localStorage.removeItem("ongId");
     } else {
-      localStorage.removeItem("usuarioLogado");
       localStorage.removeItem("usuarioId");
     }
 
