@@ -102,74 +102,29 @@ function CreateNeed() {
     setMostrarConfirmacao(true);
   };
 
-  const publicarNecessidades = () => {
+  const publicarNecessidades = async () => {
     if (!ongLogada) {
-      alert("Você precisa estar logado como ONG para publicar necessidades.");
-      navigate("/");
+      alert("Faça login");
       return;
     }
 
-    if (
-      !ongLogada.chavePix ||
-      !ongLogada.endereco ||
-      !ongLogada.diasFuncionamento ||
-      !ongLogada.horarioFuncionamento
-    ) {
-      alert(
-        "Complete o perfil da ONG com chave Pix, endereço e horário de funcionamento antes de publicar.",
-      );
-      navigate("/perfil-ong");
-      return;
-    }
-
-    const necessidadesSalvas =
-      JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
-
-    const novaPublicacao = {
-      id: Date.now(),
-
-      ong: {
-        nome: ongLogada.nome,
-        email: ongLogada.email,
-        cnpj: ongLogada.cnpj,
-
-        cidade: ongLogada.cidade || ongLogada.localizacao || "",
-        localizacao: ongLogada.cidade || ongLogada.localizacao || "",
-
-        endereco: ongLogada.endereco || "",
-
-        nichoPrincipal: ongLogada.nichoPrincipal || ongLogada.nicho || "",
-        nicho: ongLogada.nichoPrincipal || ongLogada.nicho || "",
-
-        chavePix: ongLogada.chavePix || "",
-        diasFuncionamento: ongLogada.diasFuncionamento || "",
-        horarioFuncionamento: ongLogada.horarioFuncionamento || "",
-
-        imagem: ongLogada.imagem || "",
-        sobre: ongLogada.sobre || "",
-      },
-
+    const novaNecessidade = {
+      ongId: ongLogada._id,
       categorias: categoriasSelecionadas,
       itens: itens,
       status: "Publicado",
-      dataPublicacao: new Date().toLocaleString("pt-BR"),
     };
+    const resposta = await fetch("http://localhost:3001/necessidades", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(novaNecessidade),
+    });
 
-    const listaAtualizada = [...necessidadesSalvas, novaPublicacao];
-
-    localStorage.setItem(
-      "necessidadesPublicadas",
-      JSON.stringify(listaAtualizada),
-    );
-
-    alert("Necessidades publicadas com sucesso!");
-
-    setCategoriasSelecionadas([]);
-    setItens([]);
-    setNomeItem("");
-    setQuantidade("");
-    setMostrarConfirmacao(false);
-
+    const dados = await resposta.json();
+    console.log(dados);
+    alert("Necessidade publicada");
     navigate("/necessidades-publicadas");
   };
 
@@ -177,8 +132,8 @@ function CreateNeed() {
     <div className="create-need-page">
       <nav className="ong-navbar">
         <a href="#topo" className="ong-logo">
-                  <img src={logoImg} alt="Logo +COM" />
-                </a>
+          <img src={logoImg} alt="Logo +COM" />
+        </a>
 
         <div className="ong-nav-links">
           <button type="button" onClick={() => navigate("/ong-home")}>

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./mongo.js";
 import Usuario from "./models/usuario.js";
 import Ong from "./models/ong.js";
+import Necessidade from "./models/necessidade.js";
 
 dotenv.config();
 
@@ -103,6 +104,69 @@ app.post("/login", async (req, res) => {
   }
 
   res.json(conta);
+});
+
+//postar necessidade
+app.post("/necessidades", async (req, res) => {
+  try {
+    const novaNecessidade = await Necessidade.create(req.body);
+    res.json(novaNecessidade);
+  } catch (error) {
+    res.status(500).json({
+      erro: error.message,
+    });
+  }
+});
+
+//pegar necessidade (TODAS)
+app.get("/necessidades", async (req, res) => {
+  const necessidades = await Necessidade.find().populate("ongId");
+  res.json(necessidades);
+});
+
+//pegar necessidade (UMA)
+app.get("/necessidades/:id", async (req, res) => {
+  const necessidade = await Necessidade.findById(req.params.id).populate(
+    "ongId",
+  );
+  res.json({
+    ...necessidade.toObject(),
+    ong: necessidade.ongId,
+  });
+});
+
+// editar necessidade
+app.put("/necessidades/:id", async (req, res) => {
+  try {
+    const necessidadeAtualizada = await Necessidade.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      },
+    );
+
+    res.json(necessidadeAtualizada);
+  } catch (error) {
+    res.status(500).json({
+      erro: error.message,
+    });
+  }
+});
+
+// deletar necessidade
+app.delete("/necessidades/:id", async (req, res) => {
+  try {
+    await Necessidade.findByIdAndDelete(req.params.id);
+
+    res.json({
+      mensagem: "Necessidade removida",
+    });
+  } catch (error) {
+    res.status(500).json({
+      erro: error.message,
+    });
+  }
 });
 
 //liga o back end

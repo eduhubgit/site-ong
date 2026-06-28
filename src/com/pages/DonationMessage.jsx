@@ -14,28 +14,28 @@ function DonationMessage() {
   useEffect(() => {
     const buscarUsuario = async () => {
       const id = localStorage.getItem("usuarioId");
-
       if (!id) {
         alert("Você precisa estar logado");
         navigate("/");
         return;
       }
-
       const resposta = await fetch(`http://localhost:3001/usuarios/${id}`);
       const dados = await resposta.json();
-
       setUsuarioLogado(dados);
     };
-
     buscarUsuario();
   }, []);
 
-  const necessidadesPublicadas =
-    JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
+  const [publicacao, setPublicacao] = useState(null);
 
-  const publicacao = necessidadesPublicadas.find(
-    (item) => String(item.id) === String(id),
-  );
+  useEffect(() => {
+    const buscarNecessidade = async () => {
+      const resposta = await fetch(`http://localhost:3001/necessidades/${id}`);
+      const dados = await resposta.json();
+      setPublicacao(dados);
+    };
+    buscarNecessidade();
+  }, [id]);
 
   const [quantidadesDoacao, setQuantidadesDoacao] = useState({});
   const [dataEntrega, setDataEntrega] = useState("");
@@ -97,10 +97,10 @@ function DonationMessage() {
 
     return publicacao.itens
       .map((item) => {
-        const quantidadeDoada = Number(quantidadesDoacao[item.id] || 0);
+        const quantidadeDoada = Number(quantidadesDoacao[item._id] || 0);
 
         return {
-          id: item.id,
+          id: item._id,
           nome: item.nome,
           quantidadePedido: item.quantidade,
           quantidadeDoada: quantidadeDoada,
@@ -151,7 +151,7 @@ function DonationMessage() {
 
     const novaDoacao = {
       id: Date.now(),
-      publicacaoId: publicacao.id,
+      publicacaoId: publicacao._id,
 
       nomeDoador: usuarioLogado.nome,
       contato: usuarioLogado.email,
@@ -230,14 +230,14 @@ function DonationMessage() {
 
           <p>
             Você está enviando uma mensagem para:
-            <strong> {publicacao.ong.nome}</strong>
+            <strong> {publicacao.ong?.nome}</strong>
           </p>
 
           <div className="donation-needed-list">
             <h2>Necessidades da ONG</h2>
 
-            {publicacao.itens.map((item) => (
-              <div className="donation-item-selector" key={item.id}>
+            {publicacao?.itens?.map((item) => (
+              <div className="donation-item-selector" key={item._id}>
                 <div>
                   <strong>{item.nome}</strong>
                   <p>Quantidade pedida: {item.quantidade}</p>
@@ -248,9 +248,9 @@ function DonationMessage() {
                   <input
                     type="number"
                     min="0"
-                    value={quantidadesDoacao[item.id] || 0}
+                    value={quantidadesDoacao[item._id] || 0}
                     onChange={(evento) =>
-                      alterarQuantidade(item.id, evento.target.value)
+                      alterarQuantidade(item._id, evento.target.value)
                     }
                   />
                 </label>

@@ -5,8 +5,6 @@ import "../styles/ongHome.css";
 import "../styles/userHome.css";
 import logoImg from "../assets/comm.png";
 import mascoteSorrindo from "../assets/sorrindo.png";
-import fonteLogo from "../assets/PlaywriteGBJ-VariableFont_wght.ttf";
-
 
 import heroImage from "../assets/login-image.png";
 
@@ -18,16 +16,21 @@ function UserHome() {
   useEffect(() => {
     const buscarUsuario = async () => {
       const id = localStorage.getItem("usuarioId");
-
       if (!id) return;
-
       const resposta = await fetch(`http://localhost:3001/usuarios/${id}`);
       const dados = await resposta.json();
-
       setUsuarioLogado(dados);
     };
-
     buscarUsuario();
+  }, []);
+
+  useEffect(() => {
+    const buscarNecessidades = async () => {
+      const resposta = await fetch("http://localhost:3001/necessidades");
+      const dados = await resposta.json();
+      setNecessidadesPublicadas(dados);
+    };
+    buscarNecessidades();
   }, []);
 
   const [pesquisa, setPesquisa] = useState("");
@@ -53,15 +56,16 @@ function UserHome() {
     "Outros",
   ];
 
-  const necessidadesPublicadas =
-    JSON.parse(localStorage.getItem("necessidadesPublicadas")) || [];
+  const [necessidadesPublicadas, setNecessidadesPublicadas] = useState([]);
 
   const necessidadesFiltradas = necessidadesPublicadas.filter((publicacao) =>
-    publicacao.ong.nome.toLowerCase().includes(pesquisa.toLowerCase()),
+    publicacao.ongId.nome.toLowerCase().includes(pesquisa.toLowerCase()),
   );
 
   const ongsEncontradas = necessidadesFiltradas.reduce((lista, publicacao) => {
-    const ongJaExiste = lista.find((ong) => ong.email === publicacao.ong.email);
+    const ongJaExiste = lista.find(
+      (ong) => ong.email === publicacao.ongId.email,
+    );
 
     if (ongJaExiste) {
       ongJaExiste.quantidadePedidos += 1;
@@ -69,8 +73,8 @@ function UserHome() {
     }
 
     lista.push({
-      nome: publicacao.ong.nome,
-      email: publicacao.ong.email,
+      nome: publicacao.ongId.nome,
+      email: publicacao.ongId.email,
       quantidadePedidos: 1,
     });
 
@@ -173,14 +177,14 @@ function UserHome() {
 
     const novaContribuicao = {
       id: Date.now(),
-      publicacaoId: publicacaoPix.id,
+      publicacaoId: publicacaoPix._id,
 
       nomeDoador: usuarioLogado?.nome,
       contato: usuarioLogado?.email,
       imagemDoador: usuarioLogado?.imagem || "",
 
-      ongNome: publicacaoPix.ong.nome,
-      ongEmail: publicacaoPix.ong.email,
+      ongNome: publicacaoPix.ongId.nome,
+      ongEmail: publicacaoPix.ongId.email,
 
       comprovanteNome: comprovante.nome,
       comprovanteTipo: comprovante.tipo,
@@ -314,31 +318,31 @@ function UserHome() {
 
               <div className="category-carousel">
                 {publicacoesDaCategoria.map((publicacao) => (
-                  <div className="user-need-card" key={publicacao.id}>
+                  <div className="user-need-card" key={publicacao._id}>
                     <div className="user-need-image">
-                      {publicacao.ong.imagem ? (
+                      {publicacao.ongId.imagem ? (
                         <img
-                          src={publicacao.ong.imagem}
-                          alt={publicacao.ong.nome}
+                          src={publicacao.ongId.imagem}
+                          alt={publicacao.ongId.nome}
                         />
                       ) : (
                         <div className="user-need-placeholder">
-                          {publicacao.ong.nome.charAt(0).toUpperCase()}
+                          {publicacao.ongId.nome.charAt(0).toUpperCase()}
                         </div>
                       )}
                     </div>
 
                     <div className="user-need-info">
-                      <h3>{publicacao.ong.nome}</h3>
+                      <h3>{publicacao.ongId.nome}</h3>
 
                       <p className="user-need-location">
-                        {publicacao.ong.cidade ||
-                          publicacao.ong.localizacao ||
+                        {publicacao.ongId.cidade ||
+                          publicacao.ongId.localizacao ||
                           "Cidade não informada"}
                       </p>
 
                       <p className="user-need-description">
-                        {publicacao.ong.sobre ||
+                        {publicacao.ongId.sobre ||
                           "Organização dedicada a ajudar quem mais precisa."}
                       </p>
 
@@ -346,7 +350,7 @@ function UserHome() {
                         <h4>Pedidos da ONG</h4>
 
                         {publicacao.itens.map((item) => (
-                          <div className="user-card-item" key={item.id}>
+                          <div className="user-card-item" key={item._id}>
                             <strong>{item.nome}</strong>
                             <span>{item.quantidade}</span>
                           </div>
@@ -357,7 +361,7 @@ function UserHome() {
                         <button
                           type="button"
                           className="btn-pedidos"
-                          onClick={() => navigate(`/doar/${publicacao.id}`)}
+                          onClick={() => navigate(`/doar/${publicacao._id}`)}
                         >
                           Doar
                         </button>
@@ -457,7 +461,7 @@ function UserHome() {
               ×
             </button>
 
-            <h2>Contribuir para {publicacaoPix.ong.nome}</h2>
+            <h2>Contribuir para {publicacaoPix.ongId.nome}</h2>
 
             <p>
               Para contribuir com dinheiro, copie a chave Pix abaixo e realize a
@@ -468,7 +472,7 @@ function UserHome() {
               <strong>Chave Pix:</strong>
 
               <span>
-                {publicacaoPix.ong.chavePix || "Chave Pix não informada"}
+                {publicacaoPix.ongId.chavePix || "Chave Pix não informada"}
               </span>
             </div>
 
