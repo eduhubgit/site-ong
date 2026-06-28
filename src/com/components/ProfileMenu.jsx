@@ -7,11 +7,8 @@ function ProfileMenu({ tipo, pessoa }) {
 
   const [menuAberto, setMenuAberto] = useState(false);
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
-
   const nome = pessoa?.nome || (tipo === "ong" ? "ONG" : "Usuário");
-
   const inicialPerfil = nome ? nome.charAt(0).toUpperCase() : "?";
-
   const imagemPerfil = pessoa?.imagem || null;
 
   const irParaPerfil = () => {
@@ -35,9 +32,7 @@ function ProfileMenu({ tipo, pessoa }) {
     } else {
       localStorage.removeItem("usuarioId");
     }
-
     setMostrarConfirmacao(false);
-
     navigate("/");
   };
 
